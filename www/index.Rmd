@@ -1,0 +1,49 @@
+---
+title: '**SelvarMix**'
+output: html_document
+bibliography: biblio.bib
+---
+
+*SelvarMix: A R package for variable selection in model-based clustering and discriminant analysis with a regularization approach.*
+
+**Description:**
+
+* *Authors*: **Mohammed A. Sedki** and **Cathy Maugis-Rabusseau** and **Gilles Celeux**.
+* *License*: [GPL-2](http://www.gnu.org/licenses/gpl-2.0.html).
+* *Download SelvarMix 1.2 (beta version)*: [link](http://r-forge.r-project.org/R/?group_id=2044). 
+
+*  *Download SelvarMix 1.1 (cran version)*: [link](http://cran.r-project.org/web/packages/SelvarMix/).
+* *Reference*: [SelvarMix: A R package for variable selection in model-based clustering and discriminant analysis with a regularization approach](https://hal.archives-ouvertes.fr/hal-01053784/), Sedki, M. and Maugis-Rabusseau, C. and Celeux, G., 2016, preprint.
+
+
+<a id="top"></a>
+**Site map:**  
+
+* <a href="#intro">Introduction</a>.
+* <a href="#tutorial">Tutorial (overview of the SelvarMix functions)</a>.
+* <a href="#simdata">Cluster analysis of a synthetic continuous data set</a>.
+* <a href="#simadataDA">Discriminant analysis of a synthetic continuous data set</a>.
+
+All the experiments are used with SelvarMix 1.2
+<a id="intro"></a>
+
+### Introduction
+*SelvarMix* carries out a regularization approach of variable selection is con-
+sidered in the model-based clustering and classification frameworks. First, the
+variables are arranged in order with a lasso-like procedure. Second, the method
+of [@Maugis2009b; @Maugis2011] is adapted to define the role of variables in the
+two frameworks. This variable ranking allows us to avoid the painfully slow
+stepwise algorithms of [@Maugis2009b]. Thus, our method implemented
+in the R package SelvarMix, provides a much faster variable selection proce-
+dure than [@Maugis2009b;@Maugis2011] and allows us to study high-dimensional
+datasets.
+
+
+Tool functions *summary and print*  facilitate the result interpretation.
+
+* <a href="#top">Go to the top</a>
+
+
+<a id="tutorial"></a>
+
+###  Overview of the SelvarMix functions
