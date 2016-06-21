@@ -9,21 +9,24 @@ using the penalized EM algorithm of Zhou et al (2009) (adapted in Sedki et al (2
 for the discriminant analysis settings).
 }
 \usage{
-SortvarLearn(data, knownlabels, lambda, rho, nbCores)
+SortvarLearn(x, z, type, lambda, rho, nbcores)
 }
 \arguments{
-  \item{data}{
+  \item{x}{
   matrix  containing quantitative data. 
   Rows correspond to observations and
   columns correspond to variables
 }
 
-\item{knownlabels}{
+\item{z}{
   an integer vector or a factor of size
   number of observations. Each cell corresponds to a
   cluster affectation. So the maximum value is the number
   of clusters.
 }
+
+\item{type}{character defining the type of ranking procedure, must be "lasso" or "likelihood". Default is "lasso"}
+
 
   \item{lambda}{
   numeric listing of tuning parameter for \eqn{\ell_1} mean penalty
@@ -32,7 +35,7 @@ SortvarLearn(data, knownlabels, lambda, rho, nbCores)
   numeric listing of tuning parameter for \eqn{\ell_1} precision matrix penalty
 }
 
-\item{nbCores}{
+\item{nbcores}{
   number of CPUs to be used when parallel computing is utilized (default is 2)
   }
 }
@@ -73,20 +76,13 @@ Mohammed Sedki \email{mohammed.sedki@u-psud.fr}
 }
 \examples{
 \dontrun{
-## Simulated data  example as shown in Sedki et al (2014)
-## n = 2000 observations, p = 14 variables 
+## wine data set 
+## n = 178 observations, p = 27 variables 
+require(Rmixmod)
 require(glasso)
-data(scenarioCor)
-data.cor <- scenarioCor[,1:14]
-labels.cor <-scenarioCor[,15]
-
-lambda <- seq(20,  50, length = 10)
-rho <- seq(1, 2, length=2)
-
-
-
-## variable ranking in discriminant analysis 
-var.ranking.da <- SortvarLearn(data.cor, labels.cor, lambda, rho)
+data(wine)
+set.seed(123)
+junk <- SortvarLearn(x=wine, z=cls, nbcores=4)
 }
 }
 \keyword{Variable ranking}

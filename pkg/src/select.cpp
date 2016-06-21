@@ -35,21 +35,23 @@ List Select::selectS(vector<int> Order)
     varSelectClust.push_back(Order[0]);
     Mylist = b.ClustBestModel(varSelectClust);
     CritValue = as<double>(Mylist["criterionValue"]);
-    
     while((ClustVar > 0) && (firstIndex < (int)Order.size()))
     {
         ClustVar = 0;
         for(idx = firstIndex; idx < lastIndex; ++idx)
         {
-            if(idx < (int)Order.size())
-            {
+             if(idx < (int)Order.size())
+             {
                 aux.clear(); varSelectReg.clear(); varSelectClust_aux.clear();
                 aux.push_back(Order[idx]);
                 varSelectReg = (this->sReg).selectReg(varSelectClust,aux,InitialProjectsNb);
                 varSelectClust_aux = (this->v).ajouter_var(varSelectClust,aux);
+                //cout << "idx ... " << idx << "...." << endl; 
                 Mylistaux = b.ClustBestModel(varSelectClust_aux);
+                List mylist = v.bicReggen(aux, varSelectReg, numeromodeleaux);
+                //cout << "idx ... " << idx << " OK " << endl;
                 critClustaux = as<double>(Mylistaux["criterionValue"]);
-                critDiffClust = critClustaux - CritValue - v.bicReggen(aux, varSelectReg, numeromodeleaux);
+                critDiffClust = critClustaux - CritValue - as<double>(mylist["bicvalue"]);
                 if(critDiffClust > 0)
                 {
                     varSelectClust =  varSelectClust_aux;
@@ -64,13 +66,12 @@ List Select::selectS(vector<int> Order)
         lastIndex += packSize;
         
     }
-    
-    //cout << " .... S is selected .... " << endl;
     return List::create(Named("S") = wrap(varSelectClust),
                         Named("model") = Mylist["model"],
                         Named("criterionValue") = Mylist["criterionValue"],
                         Named("criterion") = Mylist["criterion"],
-                        Named("nbCluster") = Mylist["nbCluster"],
+                        Named("nbcluster") = Mylist["nbcluster"],
+                        Named("parameters") = Mylist["parameters"],
                         Named("proba") = Mylist["proba"],
                         Named("partition") = Mylist["partition"]);
 }
@@ -117,7 +118,6 @@ vector<int> Select::selectW(vector<int> Order, vector<int>OtherVar)
         lastIndex = firstIndex; 
         firstIndex -= packSize; 
     }
-    //cout << " .... W is selected .... " << endl;
     return(varIndep);
 };
 

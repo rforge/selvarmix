@@ -38,7 +38,7 @@ mat Vect::const_matrix(vector<int> vecteur)
 
 
 //Calculation of BICreg 
-double Vect::bicReggen(vector<int> vectH, vector<int> vectY, int numr)
+List Vect::bicReggen(vector<int> vectH, vector<int> vectY, int numr)
 {
   double reg = 0.0, sign, val;  
   
@@ -97,7 +97,9 @@ double Vect::bicReggen(vector<int> vectH, vector<int> vectY, int numr)
       lambda=(v*(a+1)) + 1;
       reg=-(n*v*log(2*M_PI*sigma)) -(n*v) - (lambda*log(n));
     }
-  return reg;
+  return List::create(Named("bicvalue") = reg, 
+                      Named("B") = B);
+                    
 }//end Vect::bicReggen
 
 //removing a part of a vector

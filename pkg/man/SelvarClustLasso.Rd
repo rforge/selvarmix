@@ -9,18 +9,18 @@ using a lasso ranking on the variables as described in Sedki et al (2014).
 The variable ranking step uses the penalized EM algorithm of Zhou et al (2009).
 }
 \usage{
-SelvarClustLasso(data, nbCluster, lambda, rho, hybrid.size, criterion, 
-                 models, regModel, indepModel, nbCores)
+SelvarClustLasso(x, nbcluster, lambda, rho, type, rank, hsize, criterion, 
+                 models, rmodel, imodel, nbcores)
 }
 
 \arguments{
 
-  \item{data}{
-  matrix  containing quantitative data. 
+  \item{x}{
+  matrix or data frame containing quantitative data. 
   Rows correspond to observations and
   columns correspond to variables
 }
-  \item{nbCluster}{
+  \item{nbcluster}{
  numeric listing of the number of clusters (must be positive integers)
 }
   \item{lambda}{
@@ -29,7 +29,14 @@ SelvarClustLasso(data, nbCluster, lambda, rho, hybrid.size, criterion,
   \item{rho}{
   numeric listing of the tuning parameter for \eqn{\ell_1} precision matrix penalty
 }
-\item{hybrid.size}{
+ 
+ \item{type}{character defining the type of ranking procedure, must be "lasso" or "likelihood". Default is "lasso"}
+
+
+  \item{rank}{
+  integer listing the rank of variables with (the length must be equal to the number of columns in x)
+}
+\item{hsize}{
 optional parameter make less strength  the hybrid forward and backward 
 algorithms to select \eqn{S} and \eqn{W} sets
 }
@@ -46,7 +53,7 @@ algorithms to select \eqn{S} and \eqn{W} sets
   (see mixmodGaussianModel() in Rmixmod package to
   specify other models)}
 
-\item{regModel}{list of character defining the covariance matrix form for
+\item{rmodel}{list of character defining the covariance matrix form for
   the linear regression of \eqn{U} on the \eqn{R} set of variables. 
   Possible values: "LI" for spherical form,
   "LB" for diagonal form and  "LC" for general form.
@@ -54,12 +61,12 @@ algorithms to select \eqn{S} and \eqn{W} sets
   c("LI", "LC"), c("LB", "LC") and c("LI", "LB", "LC"). 
   Default is c("LI", "LB", "LC")}
 
-\item{indepModel}{list of character defining the covariance matrix form for
+\item{imodel}{list of character defining the covariance matrix form for
   independent variables \eqn{W}. Possible values: "LI" for spherical 
   form and "LB" for diagonal form. Possible values: "LI", "LB", c("LI", "LB"). 
   Default is c("LI", LB")}
 
-\item{nbCores}{
+\item{nbcores}{
   number of CPUs to be used when parallel computing is utilized (default is 2)
   }
 }
@@ -70,11 +77,14 @@ algorithms to select \eqn{S} and \eqn{W} sets
 \item{U }{The selected set of redundant variables}
 \item{W }{The selected set of independent variables}
 \item{criterionValue}{The criterion value for the selected model}
-\item{nbCluster}{The selected number of clusters}
+\item{nbcluster}{The selected number of clusters}
 \item{model}{The selected Gaussian mixture form} %% the selected gaussian mixture form
-\item{regModel }{The  selected covariance form for the regression}
-\item{indepModel}{The selected covariance form for the independent gaussian distribution}
-\item{proba }{Matrix containing the conditional probabilities of belonging to each cluster for all observations}
+\item{rmodel }{The  selected covariance form for the regression}
+\item{imodel}{The selected covariance form for the independent gaussian distribution}
+\item{parameters}{Rmixmod [\code{\linkS4class{Parameter}}] object containing all mixture parameters}
+\item{regparameters}{Matrix containing all regression coefficients, each column is the regression coefficients of one 
+redundant variable on the selected R set}
+\item{proba}{Matrix containing the conditional probabilities of belonging to each cluster for all observations}
 \item{partition}{Vector of length \emph{n} containing the cluster assignments of the \emph{n} observations according to the Maximum-a-Posteriori rule}
 }
 
@@ -105,29 +115,18 @@ Mohammed Sedki <\url{mohammed.sedki@u-psud.fr}>
 \link{SelvarLearnLasso}
 \link{SortvarClust}
 \link{SortvarLearn}
-\link{scenarioCor}
+\link{wine}
 }
 \examples{
 \dontrun{
-## Simulated data  example as shown in Maugis et al. (2009) 
-## n = 2000 observations, p = 14 variables 
+## wine data set 
+## n = 178 observations, p = 27 variables 
 require(Rmixmod)
 require(glasso)
-data(scenarioCor)
-data.cor <- scenarioCor[,1:14]
-
-lambda <- seq(20,  100, by = 10)
-rho <- seq(1, 2, length=2)
-hybrid.size <- 3
-nbCluster <-  c(3,4)
-criterion <- "BIC"
-models <- mixmodGaussianModel(family = "spherical", equal.proportions = TRUE)
-regModel <- c("LI","LB","LC")
-indepModel <- c("LI","LB")
-
-
-simulate.cl <- SelvarClustLasso(data.cor, nbCluster, lambda, rho, hybrid.size, 
-                                criterion, models, regModel, indepModel)
- 
+data(wine)
+set.seed(123)
+junk <- SelvarClustLasso(x=wine, nbcluster=1:5, models=mixmodGaussianModel(family = "diagonal"), nbcores=4)
+summary(junk)
+print(junk)
 } 
 }

@@ -10,111 +10,87 @@ using namespace Rcpp;
 IntegerVector rcppClusteringEMGlasso(List InputList, double l, double r);
 RcppExport SEXP SelvarMix_rcppClusteringEMGlasso(SEXP InputListSEXP, SEXP lSEXP, SEXP rSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< List >::type InputList(InputListSEXP );
-        Rcpp::traits::input_parameter< double >::type l(lSEXP );
-        Rcpp::traits::input_parameter< double >::type r(rSEXP );
-        IntegerVector __result = rcppClusteringEMGlasso(InputList, l, r);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< List >::type InputList(InputListSEXP);
+    Rcpp::traits::input_parameter< double >::type l(lSEXP);
+    Rcpp::traits::input_parameter< double >::type r(rSEXP);
+    __result = Rcpp::wrap(rcppClusteringEMGlasso(InputList, l, r));
+    return __result;
 END_RCPP
 }
 // rcppDiscriminantAnalysisGlasso
 IntegerVector rcppDiscriminantAnalysisGlasso(NumericMatrix X_, IntegerVector labels_, const int nbClust, double l, double r);
 RcppExport SEXP SelvarMix_rcppDiscriminantAnalysisGlasso(SEXP X_SEXP, SEXP labels_SEXP, SEXP nbClustSEXP, SEXP lSEXP, SEXP rSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< NumericMatrix >::type X_(X_SEXP );
-        Rcpp::traits::input_parameter< IntegerVector >::type labels_(labels_SEXP );
-        Rcpp::traits::input_parameter< const int >::type nbClust(nbClustSEXP );
-        Rcpp::traits::input_parameter< double >::type l(lSEXP );
-        Rcpp::traits::input_parameter< double >::type r(rSEXP );
-        IntegerVector __result = rcppDiscriminantAnalysisGlasso(X_, labels_, nbClust, l, r);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericMatrix >::type X_(X_SEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type labels_(labels_SEXP);
+    Rcpp::traits::input_parameter< const int >::type nbClust(nbClustSEXP);
+    Rcpp::traits::input_parameter< double >::type l(lSEXP);
+    Rcpp::traits::input_parameter< double >::type r(rSEXP);
+    __result = Rcpp::wrap(rcppDiscriminantAnalysisGlasso(X_, labels_, nbClust, l, r));
+    return __result;
 END_RCPP
 }
 // rcppSelectS
 List rcppSelectS(NumericMatrix X, std::vector<int> Order, const int nbCluster, S4 CovForm, const int packSize, std::string Crit, IntegerVector knownlabels, IntegerVector DA);
 RcppExport SEXP SelvarMix_rcppSelectS(SEXP XSEXP, SEXP OrderSEXP, SEXP nbClusterSEXP, SEXP CovFormSEXP, SEXP packSizeSEXP, SEXP CritSEXP, SEXP knownlabelsSEXP, SEXP DASEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< NumericMatrix >::type X(XSEXP );
-        Rcpp::traits::input_parameter< std::vector<int> >::type Order(OrderSEXP );
-        Rcpp::traits::input_parameter< const int >::type nbCluster(nbClusterSEXP );
-        Rcpp::traits::input_parameter< S4 >::type CovForm(CovFormSEXP );
-        Rcpp::traits::input_parameter< const int >::type packSize(packSizeSEXP );
-        Rcpp::traits::input_parameter< std::string >::type Crit(CritSEXP );
-        Rcpp::traits::input_parameter< IntegerVector >::type knownlabels(knownlabelsSEXP );
-        Rcpp::traits::input_parameter< IntegerVector >::type DA(DASEXP );
-        List __result = rcppSelectS(X, Order, nbCluster, CovForm, packSize, Crit, knownlabels, DA);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericMatrix >::type X(XSEXP);
+    Rcpp::traits::input_parameter< std::vector<int> >::type Order(OrderSEXP);
+    Rcpp::traits::input_parameter< const int >::type nbCluster(nbClusterSEXP);
+    Rcpp::traits::input_parameter< S4 >::type CovForm(CovFormSEXP);
+    Rcpp::traits::input_parameter< const int >::type packSize(packSizeSEXP);
+    Rcpp::traits::input_parameter< std::string >::type Crit(CritSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type knownlabels(knownlabelsSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type DA(DASEXP);
+    __result = Rcpp::wrap(rcppSelectS(X, Order, nbCluster, CovForm, packSize, Crit, knownlabels, DA));
+    return __result;
 END_RCPP
 }
 // rcppSelectW
 IntegerVector rcppSelectW(NumericMatrix X, std::vector<int> Order, std::vector<int> OtherVar, const int packSize);
 RcppExport SEXP SelvarMix_rcppSelectW(SEXP XSEXP, SEXP OrderSEXP, SEXP OtherVarSEXP, SEXP packSizeSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< NumericMatrix >::type X(XSEXP );
-        Rcpp::traits::input_parameter< std::vector<int> >::type Order(OrderSEXP );
-        Rcpp::traits::input_parameter< std::vector<int> >::type OtherVar(OtherVarSEXP );
-        Rcpp::traits::input_parameter< const int >::type packSize(packSizeSEXP );
-        IntegerVector __result = rcppSelectW(X, Order, OtherVar, packSize);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericMatrix >::type X(XSEXP);
+    Rcpp::traits::input_parameter< std::vector<int> >::type Order(OrderSEXP);
+    Rcpp::traits::input_parameter< std::vector<int> >::type OtherVar(OtherVarSEXP);
+    Rcpp::traits::input_parameter< const int >::type packSize(packSizeSEXP);
+    __result = Rcpp::wrap(rcppSelectW(X, Order, OtherVar, packSize));
+    return __result;
 END_RCPP
 }
 // rcppSelectR
 IntegerVector rcppSelectR(NumericMatrix X, std::vector<int> S, std::vector<int> U, std::string regmodel);
 RcppExport SEXP SelvarMix_rcppSelectR(SEXP XSEXP, SEXP SSEXP, SEXP USEXP, SEXP regmodelSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< NumericMatrix >::type X(XSEXP );
-        Rcpp::traits::input_parameter< std::vector<int> >::type S(SSEXP );
-        Rcpp::traits::input_parameter< std::vector<int> >::type U(USEXP );
-        Rcpp::traits::input_parameter< std::string >::type regmodel(regmodelSEXP );
-        IntegerVector __result = rcppSelectR(X, S, U, regmodel);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericMatrix >::type X(XSEXP);
+    Rcpp::traits::input_parameter< std::vector<int> >::type S(SSEXP);
+    Rcpp::traits::input_parameter< std::vector<int> >::type U(USEXP);
+    Rcpp::traits::input_parameter< std::string >::type regmodel(regmodelSEXP);
+    __result = Rcpp::wrap(rcppSelectR(X, S, U, regmodel));
+    return __result;
 END_RCPP
 }
 // rcppCrit
 List rcppCrit(NumericMatrix X, List MyList, std::vector<std::string> rgm, std::vector<std::string> idm);
 RcppExport SEXP SelvarMix_rcppCrit(SEXP XSEXP, SEXP MyListSEXP, SEXP rgmSEXP, SEXP idmSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< NumericMatrix >::type X(XSEXP );
-        Rcpp::traits::input_parameter< List >::type MyList(MyListSEXP );
-        Rcpp::traits::input_parameter< std::vector<std::string> >::type rgm(rgmSEXP );
-        Rcpp::traits::input_parameter< std::vector<std::string> >::type idm(idmSEXP );
-        List __result = rcppCrit(X, MyList, rgm, idm);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericMatrix >::type X(XSEXP);
+    Rcpp::traits::input_parameter< List >::type MyList(MyListSEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string> >::type rgm(rgmSEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string> >::type idm(idmSEXP);
+    __result = Rcpp::wrap(rcppCrit(X, MyList, rgm, idm));
+    return __result;
 END_RCPP
 }

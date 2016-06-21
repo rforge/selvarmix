@@ -55,6 +55,7 @@ List rcppCrit(NumericMatrix X, List MyList, std::vector<std::string> rgm, std::v
     SelectReg sReg(v);
     SelectRegGen sRegGen(v);
     int rhat = 0, lhat = 0, initsave = 0;
+    mat reg;
     stdivec varSelectClust, varIndep, varNonIndep, varReg, SFinal, RFinal, UFinal, WFinal, Empty, regmodel, indepmodel;
     long double critClustFinal, BicRegFinal, crit, Lmax;
     stddvec BicIndepFinal;
@@ -97,13 +98,16 @@ List rcppCrit(NumericMatrix X, List MyList, std::vector<std::string> rgm, std::v
             if (varNonIndep.size()==1)     // if Card(U)=1 et && Card(W) = 0
             {
                 varReg=sReg.selectReg(varSelectClust,varNonIndep,InitialProjectsNb);  //r=1
-                BicRegFinal=v.bicReggen(varNonIndep,varReg,regmodel[0]);
+                List mylist = v.bicReggen(varNonIndep,varReg,regmodel[0]);
+                BicRegFinal= mylist["bicvalue"];
                 crit = critClustFinal + BicRegFinal;
                 if ((initsave==0) || ((initsave==1) & (crit>Lmax)))
                 {
                     initsave=1;
                     SFinal=varSelectClust; RFinal=varReg; UFinal=varNonIndep; WFinal=Empty;
-                    rhat=1; lhat=0;
+                    rhat=1; 
+                    lhat=0;
+                    reg = as<mat>(mylist("B"));
                     Lmax=crit;
                 }
             } // end if Card(U)=1
@@ -112,12 +116,14 @@ List rcppCrit(NumericMatrix X, List MyList, std::vector<std::string> rgm, std::v
                 for (int p=0; p < (int)regmodel.size();++p)
                 {
                     varReg=sRegGen.selectReggen(varSelectClust,varNonIndep,regmodel[p],InitialProjectsNb);
-                    BicRegFinal=v.bicReggen(varNonIndep,varReg,regmodel[p]);
+                   List mylist =v.bicReggen(varNonIndep,varReg,regmodel[p]); 
+                    BicRegFinal= mylist["bicvalue"];
                     crit = critClustFinal + BicRegFinal;
                     if ((initsave==0) || ((initsave==1) & (crit>Lmax)))
                     {
                         initsave=1;
                         SFinal=varSelectClust; RFinal=varReg; UFinal=varNonIndep; WFinal=Empty;
+                        reg = as<mat>(mylist("B"));
                         rhat=regmodel[p]; lhat=0;
                         Lmax=crit;
                     }
@@ -127,7 +133,9 @@ List rcppCrit(NumericMatrix X, List MyList, std::vector<std::string> rgm, std::v
             {
                 //calculation of BicIndepFinal
                 for (int l=0; l < (int)indepmodel.size();++l)
-                    BicIndepFinal.push_back(v.bicReggen(varIndep,Empty,indepmodel[l]));
+                {   List mylist = v.bicReggen(varIndep,Empty,indepmodel[l]);
+                    BicIndepFinal.push_back(mylist["bicvalue"]);
+                }  
                 if (varNonIndep.size()==0)         //The redundant variable set is empty
                 {
                     for (int l=0; l < (int)indepmodel.size();++l)
@@ -148,7 +156,8 @@ List rcppCrit(NumericMatrix X, List MyList, std::vector<std::string> rgm, std::v
                     if (varNonIndep.size()==1)        //Card(U)=1
                     {                                                                    //card de U est 1
                         varReg=sReg.selectReg(varSelectClust,varNonIndep,InitialProjectsNb); //r=1
-                        BicRegFinal=v.bicReggen(varNonIndep,varReg,regmodel[0]);
+                        List mylist = v.bicReggen(varNonIndep,varReg,regmodel[0]); 
+                        BicRegFinal= mylist["bicvalue"];
                         for (int l=0; l < (int)indepmodel.size();++l)
                         {
                             crit=critClustFinal + BicRegFinal + BicIndepFinal[l];
@@ -156,6 +165,7 @@ List rcppCrit(NumericMatrix X, List MyList, std::vector<std::string> rgm, std::v
                             {
                                 initsave=1;
                                 SFinal=varSelectClust; RFinal=varReg; UFinal=varNonIndep; WFinal=varIndep;
+                                reg = as<mat>(mylist("B"));
                                 rhat=1; lhat=indepmodel[l];
                                 Lmax=crit;
                                 
@@ -167,7 +177,8 @@ List rcppCrit(NumericMatrix X, List MyList, std::vector<std::string> rgm, std::v
                         for (int p=0; p < (int)regmodel.size();++p)
                         {
                             varReg=sRegGen.selectReggen(varSelectClust,varNonIndep,regmodel[p],InitialProjectsNb);
-                            BicRegFinal=v.bicReggen(varNonIndep,varReg,regmodel[p]);
+                            List mylist = v.bicReggen(varNonIndep,varReg,regmodel[p]); 
+                            BicRegFinal = mylist["bicvalue"];
                             for (int l=0; l < (int)indepmodel.size();++l)
                             {
                                 crit = critClustFinal + BicRegFinal+ BicIndepFinal[l]; 
@@ -175,7 +186,8 @@ List rcppCrit(NumericMatrix X, List MyList, std::vector<std::string> rgm, std::v
                                 {
                                     initsave=1;                            
                                     SFinal=varSelectClust; RFinal=varReg; UFinal=varNonIndep; WFinal=varIndep; 
-                                    rhat=regmodel[p]; lhat=indepmodel[l]; 
+                                    rhat=regmodel[p]; lhat=indepmodel[l];
+                                    reg = as<mat>(mylist("B"));
                                     Lmax=crit;
                                 } 
                             }
@@ -196,15 +208,19 @@ List rcppCrit(NumericMatrix X, List MyList, std::vector<std::string> rgm, std::v
     if(lhat == 2)
         lhats = "LB";
     
+    //cout << "rmodel " << rhats << "  imodel  " << lhats << endl; 
     return List::create(Named("S") = wrap(SFinal), 
                         Named("R") = wrap(RFinal), 
                         Named("U") = wrap(UFinal), 
                         Named("W") = wrap(WFinal),
                         Named("criterionValue") = Lmax, 
-                        Named("nbCluster") = MyList["nbCluster"],
+                        Named("criterion") = MyList["criterion"],
+                        Named("nbcluster") = MyList["nbcluster"],
                         Named("model") = MyList["model"],
-                        Named("regModel") = rhats, 
-                        Named("indepModel") = lhats,
+                        Named("rmodel") = rhats, 
+                        Named("imodel") = lhats,
+                        Named("parameters") = MyList["parameters"],
                         Named("proba") = MyList["proba"],
-                        Named("partition") = MyList["partition"]);  
+                        Named("partition") = MyList["partition"],
+                        Named("regparameters")= wrap(reg));  
 }

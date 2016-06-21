@@ -1,39 +1,38 @@
 ClusteringEMGlasso <- function(data, 
-                               nbCluster, 
+                               nbcluster, 
                                lambda, 
                                rho,
-                               nbCores)
+                               nbcores)
 {
   data <- as.matrix(data)
   n <- as.integer(dim(data)[1])
   p <- as.integer(dim(data)[2])
-  nbCluster <- as.integer(nbCluster)
+  nbcluster <- as.integer(nbcluster)
   
   
-  if((length(lambda)*length(rho)) < nbCores)
-    nbCores <- (length(lambda)*length(rho))
-  #print(c(" ... nbCores = ... ", nbCores))
-  # si on est sous windows 
+  if((length(lambda)*length(rho)) < nbcores)
+    nbcores <- (length(lambda)*length(rho))
+  
   if(Sys.info()["sysname"] == "Windows")
-    cl <- makeCluster(nbCores)
+    cl <- makeCluster(nbcores)
   
-  if(length(nbCluster) == 1)
+  if(length(nbcluster) == 1)
     
-    junk <- InitParameter(data, nbCluster, n.start = 250, small.pen = 0.5) 
+    junk <- InitParameter(data, nbcluster, n.start = 250, small.pen = 0.5) 
   
   else{  
     wrapper.init.parameter <- function(k){return(InitParameter(data, k, n.start = 250, small.pen = 0.5))}
     if(Sys.info()["sysname"] == "Windows")
     {
-      common.objects <- c("InitParameter")
-      clusterEvalQ(cl, require(glasso))
+      common.objects <- c("InitParameter", "glasso")
+      #clusterEvalQ(cl, require(glasso))
       clusterExport(cl=cl, varlist = common.objects, envir = environment())
-      junk <- clusterApply(cl, x = as.integer(nbCluster), fun = wrapper.init.parameter)
+      junk <- clusterApply(cl, x = as.integer(nbcluster), fun = wrapper.init.parameter)
     }
     else
-      junk <- mclapply(X = as.integer(nbCluster), 
+      junk <- mclapply(X = as.integer(nbcluster), 
                        FUN = wrapper.init.parameter, 
-                       mc.cores = nbCores,
+                       mc.cores = nbcores,
                        mc.preschedule = TRUE,
                        mc.cleanup = TRUE)
     
@@ -47,23 +46,21 @@ ClusteringEMGlasso <- function(data,
     return(result)
   }
   ##...................................................................##
-  ##....ici junk[[k]] contient le paramètre initial pour nbClust = k....##
   ##...................................................................##
   pen.grid <- matrix(0, (length(lambda)*length(rho)), 2)  
   pen.grid <- as.matrix(expand.grid(lambda, rho))
 #   pen.grid.list <- list(); colnames(pen.grid) <- NULL
 #   pen.grid.list <- as.list(data.frame(t(pen.grid)))
 #   
-  VarRole <- array(0,dim=c((length(lambda)*length(rho)), p, length(nbCluster)))
+  VarRole <- array(0,dim=c((length(lambda)*length(rho)), p, length(nbcluster)))
   parallel.varrole <- list()
-  if(length(nbCluster)==1)
+  if(length(nbcluster)==1)
   {
     P <- junk
-    ## si c'est sous windows
     if(Sys.info()["sysname"] == "Windows")
     {
-      common.objects <- c("P") 
-      clusterEvalQ(cl, require(glasso))
+      common.objects <- c("P", "glasso") 
+      #clusterEvalQ(cl, require(glasso))
       clusterExport(cl=cl, varlist = common.objects, envir = environment())
       parallel.varrole[[1]] <-  parApply(cl, 
                                           X = pen.grid,
@@ -74,19 +71,18 @@ ClusteringEMGlasso <- function(data,
     else
       parallel.varrole[[1]] <-  mclapply(X = as.list(data.frame(t(pen.grid))), 
                                          FUN = wrapper.clusteringEMGlasso,
-                                         mc.cores = nbCores,
+                                         mc.cores = nbcores,
                                          mc.preschedule = TRUE,
                                          mc.cleanup = TRUE)
   }
   else
-    for(k in 1:length(nbCluster))
+    for(k in 1:length(nbcluster))
     {
       P <- junk[[k]]
-      ## si c'est sous windows 
       if(Sys.info()["sysname"] == "Windows")
       {
-        common.objects <- c("P")
-        clusterEvalQ(cl, require(glasso))
+        common.objects <- c("P", "glasso")
+        #clusterEvalQ(cl, require(glasso))
         clusterExport(cl=cl, varlist = common.objects, envir = environment())
         parallel.varrole[[k]] <- parApply(cl, 
                                           X = pen.grid,
@@ -96,14 +92,14 @@ ClusteringEMGlasso <- function(data,
       else
         parallel.varrole[[k]] <- mclapply(X = as.list(data.frame(t(pen.grid))),
                                           FUN = wrapper.clusteringEMGlasso,
-                                          mc.cores = nbCores,
+                                          mc.cores = nbcores,
                                           mc.preschedule = TRUE,
                                           mc.cleanup = TRUE)
     } 
-  ## si je suis sous windows
+  
   if(Sys.info()["sysname"] == "Windows")
     stopCluster(cl)
-  for(k in 1:length(nbCluster))
+  for(k in 1:length(nbcluster))
   {
     var.role <- matrix(0,(length(lambda)*length(rho)), p)
     for(j in 1:nrow(var.role))

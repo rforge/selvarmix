@@ -1,22 +1,16 @@
-######################################################
-##        ModelSelectionClust.R
-######################################################
 ModelSelectionClust <- function(VariableSelectRes,
                                 data,
-                                regModel,
-                                indepModel,
-                                nbCores)
+                                rmodel,
+                                imodel,
+                                nbcores)
 {
   
-  
-  
-  ## je récupère le nombre d'éléments de la liste
   mylist.size <- length(VariableSelectRes)
   if(mylist.size==1)
     junk <- try(rcppCrit(data, 
                          VariableSelectRes, 
-                         regModel, 
-                         indepModel), silent = TRUE)
+                         rmodel, 
+                         imodel), silent = TRUE)
   else
   {
     wrapper.rcppCrit <- function(idx)
@@ -24,21 +18,20 @@ ModelSelectionClust <- function(VariableSelectRes,
       mylist <- VariableSelectRes[[idx]]
       res <- rcppCrit(data, 
                       mylist,
-                      regModel, 
-                      indepModel)
+                      rmodel, 
+                      imodel)
       
       return(res)
     }
     
     
-    if(mylist.size < nbCores) 
-      nbCores <- mylist.size
+    if(mylist.size < nbcores) 
+      nbcores <- mylist.size
       
-    ## si on est sous windows 
     if(Sys.info()["sysname"] == "Windows")
     {
-      cl <- makeCluster(nbCores)
-      common.objects <- c("data", "VariableSelectRes", "regModel", "indepModel")
+      cl <- makeCluster(nbcores)
+      common.objects <- c("data", "VariableSelectRes", "rmodel", "imodel")
       clusterExport(cl=cl, varlist = common.objects, envir = environment())
       junk <- clusterApply(cl, 
                            x = as.integer(1:mylist.size), 
@@ -49,7 +42,8 @@ ModelSelectionClust <- function(VariableSelectRes,
     else
       junk <- mclapply(X = as.integer(1:mylist.size), 
                        FUN = wrapper.rcppCrit,
-                       mc.cores = nbCores,
+                       mc.cores = nbcores,
+                       mc.silent = TRUE,
                        mc.preschedule = TRUE,
                        mc.cleanup = TRUE)
   } 

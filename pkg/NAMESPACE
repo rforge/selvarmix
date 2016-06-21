@@ -1,8 +1,12 @@
 useDynLib(SelvarMix)
 #exportPattern("^[[:alpha:]]+")
 export(SelvarClustLasso, SelvarLearnLasso, SortvarClust, SortvarLearn)
+S3method(summary, selvarmix)
+S3method(print, selvarmix)
+importFrom("methods", is)
+importFrom("stats", cov, kmeans)
 importFrom("Rcpp", evalCpp)
 importFrom("glasso", glasso)
-importFrom("Rmixmod", mixmodCluster, mixmodLearn, mixmodGaussianModel, mixmodPredict, is.wholenumber)
+importFrom("Rmixmod", mixmodCluster, mixmodLearn, mixmodGaussianModel, mixmodPredict, is.wholenumber, mixmodStrategy)
 importFrom("parallel", mclapply, parLapply, clusterApply, makeCluster,  clusterExport,  detectCores,  stopCluster, parApply, clusterEvalQ)
 

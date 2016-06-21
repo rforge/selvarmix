@@ -9,19 +9,21 @@ This function implements variable ranking procedure in model-based clustering
 using the penalized EM algorithm of Zhou et al (2009).
 }
 \usage{
-SortvarClust(data, nbCluster, lambda, rho, nbCores)
+SortvarClust(x, nbcluster, type, lambda, rho, nbcores)
 }
 \arguments{
-  \item{data}{
+  \item{x}{
   matrix  containing quantitative data. 
   Rows correspond to observations and
   columns correspond to variables
   }
  
- \item{nbCluster}{
+ \item{nbcluster}{
   numeric listing of the number of clusters (must be integers)
   }
   
+  \item{type}{character defining the type of ranking procedure, must be "lasso" or "likelihood". Default is "lasso"}
+
   \item{lambda}{
    numeric listing of the tuning parameter for \eqn{\ell_1} mean penalty
   }
@@ -31,7 +33,7 @@ SortvarClust(data, nbCluster, lambda, rho, nbCores)
   numeric listing of the tuning parameter for \eqn{\ell_1} precision matrix penalty
   }
 
-  \item{nbCores}{
+  \item{nbcores}{
   number of CPUs to be used when parallel computing is utilized (default is 2)
   }
 }
@@ -73,19 +75,13 @@ Mohammed Sedki <mohammed.sedki@u-psud.fr>
 }
 \examples{
 \dontrun{
-## Simulated data  example as shown in Sedki et al (2014)
-## n = 2000 observations, p = 14 variables 
+## wine data set 
+## n = 178 observations, p = 27 variables 
+require(Rmixmod)
 require(glasso)
-data(scenarioCor)
-data.cor <- scenarioCor[,1:14]
-
-
-lambda <- seq(20,  100, by = 10)
-rho <- seq(1, 2, length=2)
-nbCluster <-  c(3, 4)
-
-## variable ranking in model-based clustering  
-var.ranking.cl <- SortvarClust(data.cor, nbCluster, lambda, rho)
+data(wine)
+set.seed(123)
+junk <- SortvarClust(x=wine, nbcluster=1:5, nbcores=4)
 }
 }
 \keyword{Variable ranking}

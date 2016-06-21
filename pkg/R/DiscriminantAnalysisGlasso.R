@@ -28,8 +28,8 @@ DiscriminantAnalysisGlasso <- function(data,
   if(Sys.info()["sysname"] == "Windows")
   {
     cl <- makeCluster(nbCores)
-    common.objects <- c("data", "nbCluster", "knownlabels") 
-    clusterEvalQ(cl, require(glasso))
+    common.objects <- c("data", "nbCluster", "knownlabels","glasso") 
+    #clusterEvalQ(cl, require(glasso))
     clusterExport(cl=cl, varlist = common.objects, envir = environment())
     parallel.varrole <-  parApply(cl = cl, 
                                    X = pen.grid,

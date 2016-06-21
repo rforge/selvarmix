@@ -13,7 +13,8 @@ SelectRegGen::SelectRegGen(Vect v)
 void SelectRegGen::exclusion_reggen(vector<int>& varSelectReg, vector<int>& varNonSig,vector<int>& jE, vector<int>& jI, int& stopreg, int& nummodel, int& InitialProjectsNb)
 {
   //calculation of bicRegTotal
-  double bicRegTotal = (this->v).bicReggen(varNonSig,varSelectReg,nummodel);  
+  List mylist = (this->v).bicReggen(varNonSig,varSelectReg,nummodel);  
+  double bicRegTotal = as<double>(mylist["bicvalue"]);
   //initialization of bicDiffReg and aux
   double bicDiffReg = 0.0;
   vector<int> aux;
@@ -23,7 +24,8 @@ void SelectRegGen::exclusion_reggen(vector<int>& varSelectReg, vector<int>& varN
   vector<int> jEmin;
   jEmin.push_back(varSelectReg[0]);
   //calculation of bicDiffReg
-  bicDiffReg = bicRegTotal - (this->v).bicReggen(varNonSig,numExpAux,nummodel);    
+  mylist = (this->v).bicReggen(varNonSig,numExpAux,nummodel);  
+  bicDiffReg = bicRegTotal - as<double>(mylist["bicvalue"]);   
   
   aux.clear(); numExpAux.clear();
   //temporary variable for determining the minimal bicDiffReg
@@ -31,8 +33,9 @@ void SelectRegGen::exclusion_reggen(vector<int>& varSelectReg, vector<int>& varN
   for (int j=1; j < (int)varSelectReg.size();++j)
      {
         aux.push_back(varSelectReg[j]);       
-        numExpAux = (this->v).enlever_var(varSelectReg,aux);       
-        bicDiffReg_aux = bicRegTotal - (this->v).bicReggen(varNonSig,numExpAux,nummodel); 
+        numExpAux = (this->v).enlever_var(varSelectReg,aux);    
+        List mylist = (this->v).bicReggen(varNonSig,numExpAux,nummodel);
+        bicDiffReg_aux = bicRegTotal -  as<double>(mylist["bicvalue"]);
     
         if (bicDiffReg_aux<=bicDiffReg)
           {
@@ -71,7 +74,8 @@ void SelectRegGen::exclusion_reggen(vector<int>& varSelectReg, vector<int>& varN
 void SelectRegGen::inclusion_reggen(vector<int> varSelect, vector<int>& varSelectReg, vector<int>& varNonSig,vector<int>& jE, vector<int>& jI, int& stopreg, int& nummodel, int& InitialProjectsNb)
 {
   //calculation of bicRegTotal
-  double bicRegTotal = (this->v).bicReggen(varNonSig,varSelectReg,nummodel);
+  List mylist = (this->v).bicReggen(varNonSig,varSelectReg,nummodel);
+  double bicRegTotal = as<double>(mylist["bicvalue"]);
   vector<int> varSelectRegBis = (this->v).enlever_var(varSelect,varSelectReg);   
   //Initialization of bicDiffReg and aux
   double bicDiffReg = 0.0;
@@ -82,7 +86,8 @@ void SelectRegGen::inclusion_reggen(vector<int> varSelect, vector<int>& varSelec
   vector<int> jImax;
   jImax.push_back(varSelectRegBis[0]);
   //calculation of bicDiffReg
-  bicDiffReg = -bicRegTotal + (this->v).bicReggen(varNonSig,numExpAux,nummodel);  
+  mylist = (this->v).bicReggen(varNonSig,numExpAux,nummodel);
+  bicDiffReg = -bicRegTotal + as<double>(mylist["bicvalue"]);   
  
   aux.clear(); numExpAux.clear();
   //temporary variable for determining the maximal  bicDiffReg
@@ -91,7 +96,8 @@ void SelectRegGen::inclusion_reggen(vector<int> varSelect, vector<int>& varSelec
      {       
         aux.push_back(varSelectRegBis[j]);
         numExpAux = (this->v).ajouter_var(varSelectReg,aux);
-        bicDiffReg_aux = -bicRegTotal + (this->v).bicReggen(varNonSig,numExpAux,nummodel);
+        mylist = (this->v).bicReggen(varNonSig,numExpAux,nummodel);
+        bicDiffReg_aux = -bicRegTotal + as<double>(mylist["bicvalue"]); 
         if (bicDiffReg_aux>bicDiffReg)
           {
              bicDiffReg = bicDiffReg_aux;

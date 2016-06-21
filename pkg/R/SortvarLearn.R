@@ -1,20 +1,21 @@
-SortvarLearn <- function(data,
-                         knownlabels,
-                         lambda,
-                         rho,
-                         nbCores)
+SortvarLearn <- function(x,
+                         z,
+                         type="lasso",
+                         lambda=seq(20, 100, by = 10),
+                         rho=seq(1, 2, length=2),
+                         nbcores=min(2,  detectCores(all.tests = FALSE, logical = FALSE)))
 {
-  # check data parameter
-  if(missing(data)){
-    stop("data is missing !")
+  # check x parameter
+  if(missing(x)){
+    stop("x is missing !")
   } 
-  if(is.matrix(data) == FALSE && is.data.frame(data) == FALSE) 
-    stop(paste(sQuote("data"), "must be a matrix"))  
+  if(is.matrix(x) == FALSE && is.data.frame(x) == FALSE) 
+    stop(paste(sQuote("x"), "must be a matrix"))  
   
   # check lambda parameter
-  if(missing(lambda)){
-    stop("lambda is missing!")
-  }
+  #if(missing(lambda)){
+  #  stop("lambda is missing!")
+  #}
   if(is.vector(lambda) == FALSE || length(lambda) <= 1){ 
     stop(paste(sQuote("lambda"), "must be a vector with length >= 2"))
   }
@@ -24,9 +25,9 @@ SortvarLearn <- function(data,
   
   
   # check rho parameter
-  if(missing(rho)){
-    stop("rho is missing!")
-  }
+  #if(missing(rho)){
+  #  stop("rho is missing!")
+  #}
   if(is.vector(rho) == FALSE){ 
     stop(paste(sQuote("rho"), "must be a vector"))
   }
@@ -35,42 +36,40 @@ SortvarLearn <- function(data,
   }
   
   
-  # check whether the knownlabels is missing
-  if ( missing(knownlabels)){
+  # check whether the z is missing
+  if ( missing(z)){
     stop("labels are missing!")
   }
   
   
-  if(missing(knownlabels) || length(knownlabels)==0){
-    warning("knownlabels are missing, intrumental initialization without output effect")
-    knownlabels <- rep(1, nrow(data)) 
+  if(missing(z) || length(z)==0){
+    warning("z are missing, intrumental initialization without output effect")
+    z <- rep(1, nrow(x)) 
     
   }
   
   
-  if(min(knownlabels) <= 0 || length(knownlabels) != nrow(data)){
-    stop("Each observation in knownLabels must have a valid cluster affectation !")
+  if(min(z) <= 0 || length(z) != nrow(x)){
+    stop("Each observation in z must have a valid cluster affectation !")
   }
   
-  # check nbCores 
-  nb.cpus <- detectCores(all.tests = FALSE, logical = FALSE)
-  if(missing(nbCores))
+  # check nbcores 
+  if((is.wholenumber(nbcores) == FALSE) || (nbcores < 1)) 
+    stop(paste(sQuote("nbcores"), "must be an integer > 0"))
+  
+  x <- as.matrix(scale(x, TRUE, TRUE))
+  n <- as.integer(nrow(x))
+  p <- as.integer(ncol(x))
+  nbcluster <- as.integer(max(z))
+  if(type=="lasso")
   {
-    if(nb.cpus > 1)
-      nbCores <- 2
-    if(nb.cpus == 1)
-      nbCores <- 1
-  }
-  
-  data <- as.matrix(scale(data, TRUE, TRUE))
-  n <- as.integer(nrow(data))
-  p <- as.integer(ncol(data))
-  nbCluster <- as.integer(max(knownlabels))
-  
   VarRole <- matrix(NA,(length(lambda)*length(rho)), p) 
-  VarRole <- DiscriminantAnalysisGlasso(data, nbCluster, lambda, rho, knownlabels = knownlabels, nbCores)
+  VarRole <- DiscriminantAnalysisGlasso(x, nbcluster, lambda, rho, knownlabels = z, nbcores)
   var.role.sum <- colSums(VarRole) 
   OrderVariable <- sort.int(var.role.sum,decreasing=TRUE,index.return=TRUE)$ix
+  }
+  if(type=="likelihood")
+      OrderVariable <-orderlikL(x, z, nbcores)
   
   return(OrderVariable)    
 }

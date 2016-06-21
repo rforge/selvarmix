@@ -45,7 +45,7 @@ public:
   mat const_matrix(vector<int> vecteur);
   
   //calculation of the Bicreg 
-  double bicReggen(vector<int> vectH, vector<int> vectY, int numr);
+  List bicReggen(vector<int> vectH, vector<int> vectY, int numr);
   //remove a part of a vector 
   vector<int> enlever_var(vector<int>& vecteur, vector<int>& varenv);
   //concatenate and order two variable vectors 

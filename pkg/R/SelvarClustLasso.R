@@ -1,182 +1,205 @@
-###################################################################################
-##                               SelvarClustLasso.R                              ##
-###################################################################################
 SelvarClustLasso <- 
-  function(data, 
-           nbCluster, 
-           lambda, 
-           rho,
-           hybrid.size, 
-           criterion, 
-           models,
-           regModel,
-           indepModel,
-           nbCores)
+  function(x, 
+           nbcluster, 
+           lambda = seq(20, 100, by = 10), 
+           rho=seq(1, 2, length=2),
+           type="lasso",
+           rank,
+           hsize = 3, 
+           criterion = "BIC", 
+           models = mixmodGaussianModel(listModels = c("Gaussian_pk_L_C", "Gaussian_pk_Lk_C", "Gaussian_pk_L_Ck", "Gaussian_pk_Lk_Ck")),
+           rmodel = c("LI", "LB", "LC"),
+           imodel = c("LI", "LB"),
+           nbcores = min(2,  detectCores(all.tests = FALSE, logical = FALSE)))
   {
+    options(warn=-1)
+    OrderVariable <- matrix(NA, length(nbcluster), ncol(x))
+    CheckInputsC(x, nbcluster,lambda, rho, type, hsize, criterion, models, rmodel, imodel, nbcores)
+    x <- as.matrix(x)
+    n <- as.integer(nrow(x))
+    p <- as.integer(ncol(x))
+    nbcluster <- as.integer(nbcluster)
+    OrderVariable <- matrix(NA, nrow = length(nbcluster), ncol = p) 
+    xstd <- scale(x, TRUE, TRUE)
     
-    # check data parameter
-    if(missing(data)){
-      stop("data is missing!")
-    } 
-    if(is.matrix(data) == FALSE && is.data.frame(data) == FALSE){ 
-      stop(paste(sQuote("data"), "must be a matrix!"))
-    }
-    
-    
-    # check nbCluster parameter
-    if(missing(nbCluster)){
-      stop("nbCluster is missing!")
-    }
-    if(sum(!is.wholenumber(nbCluster))){
-      stop("nbCluster must contain only integer!")
-    }
-    if(sum(nbCluster < 1)){ 
-      stop(paste(sQuote("nbCluster"), "must be an integer greater than 0!"))
-    }
-    
-    # check lambda parameter
-    if(missing(lambda)){
-      stop("lambda is missing!")
-    } 
-    if(is.vector(lambda) == FALSE | length(lambda) <= 1){ 
-      stop(paste(sQuote("lambda"), "must be a vector with length >= 2!"))
-    }
-    if (sum(lambda<=0)){
-      stop("lambda must be greater than 0!")
-    }
-    
-    
-    # check rho parameter
-    if(missing(rho)){
-      stop("rho is missing!")
-    } 
-    if(is.vector(rho) == FALSE){ 
-      stop(paste(sQuote("rho"), "must be a vector!"))
-    }
-    if(sum(rho<=0)){
-      stop("rho must be greater than 0!")
-    }
-    
-    
-    # check hybrid.size parameter
-    if(missing(hybrid.size)){
-      hybrid.size <- 3
-    }
-    if(!is.wholenumber(hybrid.size) | sum(hybrid.size < 1) | hybrid.size > ncol(data)) 
-      stop(paste(sQuote("hybrid.size"), "must be a positive integer <= ncol(data)!"))
-    
-    # check criterion parameter
-    if(missing(criterion)){
-      criterion <- "BIC"  
-    }
-    if( sum(criterion %in% c("BIC","ICL")) != length(criterion) ){
-      stop(cat(criterion[which(!(criterion %in% c("BIC","ICL")))], "is not a valid criterion name !\n"))
-    }
-    
-    # check models 
-    if(missing(models)){
-      ##models <- mixmodGaussianModel(family="general", free.proportions=TRUE)  
-      models <- mixmodGaussianModel(listModels = c("Gaussian_pk_L_C", 
-                                                   "Gaussian_pk_Lk_C", 
-                                                   "Gaussian_pk_L_Ck", 
-                                                   "Gaussian_pk_Lk_Ck"))
-    }
-    if(!(isS4(models) && is(models, "GaussianModel")))
+    supervised <- FALSE 
+    knownlabels <- as.integer(1:n)
+    if(missing(rank))
     {
-      stop("models must be a GaussianModel S4 object! (see Rmixmod package)")
-    }
-    
-    # check regModel
-    if(missing(regModel)){
-      regModel <- c("LI", "LB", "LC")
-    }
-    if( sum(regModel %in% c("LI","LB","LC")) != length(regModel) ){
-      stop(cat(regModel[which(!(regModel %in% c("LI","LB","LC")))], "is not a valid regModel name !\n"))
-    }
-    
-    # check indepModel
-    if(missing(indepModel)){
-      indepModel <- c("LI", "LB")
-    }
-    if ( sum(indepModel %in% c("LI","LB")) != length(indepModel) ){
-      stop(cat(indepModel[which(!(indepModel %in% c("LI","LB")))], "is not a valid indepModel name !\n"))
-    }
-    
-    # check nbCores 
-    nb.cpus <- detectCores(all.tests = FALSE, logical = FALSE)
-    if(missing(nbCores))
-    {
-      if(nb.cpus > 1)
-        nbCores <- 2
-      if(nb.cpus == 1)
-        nbCores <- 1
-    }
-    
-    data <- as.matrix(data)
-    n <- as.integer(nrow(data))
-    p <- as.integer(ncol(data))
-    nbCluster <- as.integer(nbCluster)
-    OrderVariable <- matrix(NA, nrow = length(nbCluster), ncol = p) 
-    dataStand <- scale(data, TRUE, TRUE)
-    print("............... start  variable  ranking .................................... ")
-    supervised <- FALSE ## c'est une initialisation qui ne sert qu'à créer l'objet CritClust en c++
-    knownlabels <- as.integer(1:n) ## une initilialisation qui ne sert qu'à créer l'objet CritClust en c++  (une autre solution à trouver !!!)
-    OrderVariable <- SortvarClust(dataStand, nbCluster, lambda, rho, nbCores)
-    print("................. variable ranking .... done ................................ ")
+      cat("variable  ranking\n")
+      OrderVariable <- SortvarClust(xstd, nbcluster, type, lambda, rho, nbcores)
+    }  
+    else
+      for(r in 1:nrow(OrderVariable))
+        OrderVariable[r,] <- rank
     bestModel <- list()
     if(length(criterion)==1)
     {
-      print(c(" ...... SRUW selection with...", criterion, "... criterion ......"))
-      VariableSelectRes <- VariableSelection(data,
-                                             nbCluster,
+      cat("SRUW selection with", criterion, "criterion\n")
+      VariableSelectRes <- VariableSelection(x,
+                                             nbcluster,
                                              models,
                                              criterion,
                                              OrderVariable,
-                                             hybrid.size,
+                                             hsize,
                                              supervised,
                                              knownlabels,
-                                             nbCores)## ici les deux derniers arguements ne jouent qu'un rôle de création d'objet c++
-    
-     if(criterion=="BIC"){
-        print(" ..... model selection  with BIC criterion...... ")
+                                             nbcores)
+      
+      if(criterion=="BIC"){
+        cat("model selection  with BIC criterion\n")
         bestModel$BIC <- ModelSelectionClust(VariableSelectRes,
-                                             data,
-                                             regModel,
-                                             indepModel,
-                                             nbCores)
+                                             x,
+                                             rmodel,
+                                             imodel,
+                                             nbcores)
       }
       else
       {
-        print(" ..... model selection  with ICL criterion...... ")
+        cat("model selection  with ICL criterion\n")
         bestModel$ICL <- ModelSelectionClust(VariableSelectRes,
-                                             data,
-                                             regModel,
-                                             indepModel,
-                                             nbCores)
+                                             x,
+                                             rmodel,
+                                             imodel,
+                                             nbcores)
       }
     }
     else
     {
       for(crit in criterion)
       {
-        print(c(" ...... SRUW selection with ", crit, " criterion...... "))
-        VariableSelectRes <- VariableSelection(data,
-                                               nbCluster,
+        cat("SRUW selection with", crit, "criterion\n")
+        VariableSelectRes <- VariableSelection(x,
+                                               nbcluster,
                                                models,
                                                crit,
                                                OrderVariable,
-                                               hybrid.size,
+                                               hsize,
                                                supervised,
                                                knownlabels,
-                                               nbCores)
+                                               nbcores)
         
-        print(c(" ..... model selection  with ", crit, " criterion...... "))
-        cmd <- paste('bestModel$', crit, ' <- ModelSelectionClust(VariableSelectRes,data,regModel,indepModel,nbCores)', sep ="")
+        cat("model selection  with", crit, " criterion\n ")
+        cmd <- paste('bestModel$', crit, ' <- ModelSelectionClust(VariableSelectRes,x,rmodel,imodel,nbcores)', sep ="")
         eval(parse(text = cmd))
       }  
     }
     
+    if(length(bestModel)==2)
+    {
+      output <- vector(mode="list",length = 2)
+      for(el in 1:2)
+      {
+        colnames(bestModel[[cl]]$regparameters) = bestModel[[cl]]$U
+        rownames(bestModel[[cl]]$regparameters) = c("intercept",bestModel[[cl]]$R)
+        object <- list(S=bestModel[[cl]]$S, 
+                       R=bestModel[[cl]]$R, 
+                       U=bestModel[[cl]]$U,
+                       W=bestModel[[cl]]$W,  
+                       criterionValue=bestModel[[cl]]$criterionValue, 
+                       criterion=bestModel[[cl]]$criterion, 
+                       model=bestModel[[cl]]$model,
+                       rmodel=bestModel[[cl]]$rmodel,
+                       imodel=bestModel[[cl]]$imodel,
+                       parameters=bestModel[[cl]]$parameters,
+                       nbcluster=bestModel[[cl]]$nbcluster, 
+                       partition=bestModel[[cl]]$partition, 
+                       proba=bestModel[[cl]]$proba,
+                       regparameters=bestModel[[cl]]$regparameters)
+        class(object) <- "selvarmix"
+        output[el] <-object 
+      }
+    }else
+    {
+      colnames(bestModel[[1]]$regparameters) = bestModel[[1]]$U
+      rownames(bestModel[[1]]$regparameters) = c("intercept",bestModel[[1]]$R)
+      output <- list(S=bestModel[[1]]$S, 
+                     R=bestModel[[1]]$R, 
+                     U=bestModel[[1]]$U,
+                     W=bestModel[[1]]$W,  
+                     criterionValue=bestModel[[1]]$criterionValue, 
+                     criterion=bestModel[[1]]$criterion, 
+                     model=bestModel[[1]]$model, 
+                     rmodel=bestModel[[1]]$rmodel,
+                     imodel=bestModel[[1]]$imodel,
+                     parameters=bestModel[[1]]$parameters,
+                     nbcluster=bestModel[[1]]$nbcluster, 
+                     partition=bestModel[[1]]$partition, 
+                     proba=bestModel[[1]]$proba,
+                     regparameters=bestModel[[1]]$regparameters)
+      class(output) <- "selvarmix"
+    }
     
-    return(bestModel) 
+    
+    return(output) 
     
   }
+selvarmix <- function(...) UseMethod("selvarmix")
+summary.selvarmix <- function(obj, ...)
+{
+  if(length(obj)==2)
+    for(i in 1:2)
+    {
+      cat("Criterion:", obj[[i]]$criterion, "\n")
+      cat("Criterion value:", obj[[i]]$criterionValue,"\n")
+      cat("Number of clusters:", obj[[i]]$nbcluster,"\n")
+      cat("Gaussian mixutre model:", obj[[i]]$model,"\n")
+      cat("Regression covariance model:", obj[[i]]$rmodel,"\n")
+      cat("Independent covariance model:", obj[[i]]$imodel,"\n")
+      cat("The SRUW model:\n")
+      cat(" S:", obj[[i]]$S,"\n")
+      cat(" R:", obj[[i]]$R,"\n")
+      cat(" U:", obj[[i]]$U,"\n")
+      cat(" W:", obj[[i]]$W,"\n")
+    }
+  else{
+    if(is.null(obj$error))
+    {
+      cat("Criterion:", obj$criterion, "\n")
+      cat("Criterion value:", obj$criterionValue,"\n")
+      cat("Number of clusters:", obj$nbcluster,"\n")
+      cat("Gaussian mixutre model:", obj$model,"\n")
+      cat("Regression covariance model:", obj$rmodel,"\n")
+      cat("Independent covariance model:", obj$imodel,"\n")
+      cat("The SRUW model:\n")
+      cat(" S:", obj$S,"\n")
+      cat(" R:", obj$R,"\n")
+      cat(" U:", obj$U,"\n")
+      cat(" W:", obj$W,"\n")
+    }
+    else
+    {
+      cat("Criterion:", obj$criterion, "\n")
+      cat("Criterion value:", obj$criterionValue,"\n")
+      cat("Number of clusters:", obj$nbcluster,"\n")
+      cat("Gaussian mixutre model:", obj$model,"\n")
+      cat("Prediction error:", round(obj$error, 2),"\n")
+      cat("Regression covariance model:", obj$rmodel,"\n")
+      cat("Independent covariance model:", obj$imodel,"\n")
+      cat("The SRUW model:\n")
+      cat(" S:", obj$S,"\n")
+      cat(" R:", obj$R,"\n")
+      cat(" U:", obj$U,"\n")
+      cat(" W:", obj$W,"\n")
+      
+      
+    }  
+  }
+}
+#selvarmix <- function(...) UseMethod("selvarmix")
+print.selvarmix <- function(obj, ...)
+{
+  if(length(obj)==2)
+    for(i in 1:2)
+    {
+      print(obj[[i]]$parameters)
+      cat("Regression parameters:\n")
+      print(obj[[i]]$regparameters)
+    }  
+  else
+  {
+    print(obj$parameters)
+    cat("Regression parameters:\n")
+    print(obj$regparameters)
+  }
+}

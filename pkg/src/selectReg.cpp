@@ -16,7 +16,8 @@ void SelectReg::exclusion_reg(vector<int>& varSelectReg, vector<int>& varNonSig,
  
   //calculation of bicRegTotal
   const int numeromodeleaux=1;
-  double bicRegTotal = v.bicReggen(varNonSig, varSelectReg, numeromodeleaux);
+  List mylist = v.bicReggen(varNonSig, varSelectReg, numeromodeleaux);
+  double bicRegTotal = as<double>(mylist["bicvalue"]);
    
   //initialization of bicDiffReg and of aux
   double bicDiffReg = 0.0;
@@ -27,7 +28,8 @@ void SelectReg::exclusion_reg(vector<int>& varSelectReg, vector<int>& varNonSig,
   vector<int> jEmin;
   jEmin.push_back(varSelectReg[0]);
   //calculation of bicDiffReg
-  bicDiffReg = bicRegTotal - v.bicReggen(varNonSig, numProjets_aux, numeromodeleaux);
+  mylist = v.bicReggen(varNonSig, numProjets_aux, numeromodeleaux);
+  bicDiffReg = bicRegTotal - as<double>(mylist["bicvalue"]);
   aux.clear(); numProjets_aux.clear();
   
   //temporary variable for determining the minimal  bicDiffReg
@@ -35,8 +37,9 @@ void SelectReg::exclusion_reg(vector<int>& varSelectReg, vector<int>& varNonSig,
   for (int j=1; j < (int)varSelectReg.size();++j)
      {
        aux.push_back(varSelectReg[j]);       
-       numProjets_aux = (this->v).enlever_var(varSelectReg,aux);       
-       bicDiffReg_aux = bicRegTotal - v.bicReggen(varNonSig, numProjets_aux, numeromodeleaux);
+       numProjets_aux = (this->v).enlever_var(varSelectReg,aux);
+       List mylist = v.bicReggen(varNonSig, numProjets_aux, numeromodeleaux);
+       bicDiffReg_aux = bicRegTotal - as<double>(mylist["bicvalue"]);
 
        //the minimal bicDiffReg
        if (bicDiffReg_aux<=bicDiffReg)
@@ -77,7 +80,8 @@ void SelectReg::exclusion_reg(vector<int>& varSelectReg, vector<int>& varNonSig,
 void SelectReg::inclusion_reg(vector<int> varSelect, vector<int>& varSelectReg, vector<int>& varNonSig,vector<int>& jE,vector<int>& jI,int& stop, int& InitialProjectsNb)
 {
   const int numeromodeleaux=1; 
-  double bicRegTotal =  v.bicReggen(varNonSig, varSelectReg, numeromodeleaux); 
+  List mylist = v.bicReggen(varNonSig, varSelectReg, numeromodeleaux);
+  double bicRegTotal = as<double>(mylist["bicvalue"]);   
   
   vector<int> varSelectRegBis = (this->v).enlever_var(varSelect,varSelectReg);   
   //initialization of bicDiffReg and of aux
@@ -90,7 +94,8 @@ void SelectReg::inclusion_reg(vector<int> varSelect, vector<int>& varSelectReg, 
   vector<int> jImax;
   jImax.push_back(varSelectRegBis[0]);
   //calculation of bicDiffReg
-  bicDiffReg = -bicRegTotal + v.bicReggen(varNonSig, numProjets_aux, numeromodeleaux);
+  mylist = v.bicReggen(varNonSig, numProjets_aux, numeromodeleaux);
+  bicDiffReg = -bicRegTotal + as<double>(mylist["bicvalue"]); 
 
   aux.clear(); numProjets_aux.clear();
   
@@ -100,9 +105,8 @@ void SelectReg::inclusion_reg(vector<int> varSelect, vector<int>& varSelectReg, 
      {       
          aux.push_back(varSelectRegBis[j]);
          numProjets_aux = (this->v).ajouter_var(varSelectReg,aux);
-	 bicDiffReg_aux = -bicRegTotal + v.bicReggen(varNonSig, numProjets_aux, numeromodeleaux);
-                                            
-          
+         mylist = v.bicReggen(varNonSig, numProjets_aux, numeromodeleaux);
+	       bicDiffReg_aux = -bicRegTotal + as<double>(mylist["bicvalue"]);
          //determination of the maximal bicDiffReg
          if (bicDiffReg_aux>bicDiffReg)
            {
@@ -134,7 +138,7 @@ void SelectReg::inclusion_reg(vector<int> varSelect, vector<int>& varSelectReg, 
 
 
 //****************************************************************************//
-//*******************sélection dans la régression ****************************//
+//*******************s?lection dans la r?gression ****************************//
 //****************************************************************************//
 vector<int> SelectReg::selectReg(vector<int> varSelect,vector<int>& varNonSig, int& InitialProjectsNb)
 {
