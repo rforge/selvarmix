@@ -28,14 +28,14 @@ All the experiments are used with SelvarMix 1.2
 <a id="intro"></a>
 
 ### Introduction
-*SelvarMix* carries out a regularization approach of variable selection is con-
-sidered in the model-based clustering and classification frameworks. First, the
+*SelvarMix* carries out a regularization approach of variable selection is considered 
+in the model-based clustering and classification frameworks. First, the
 variables are arranged in order with a lasso-like procedure. Second, the method
 of [@Maugis2009b; @Maugis2011] is adapted to define the role of variables in the
 two frameworks. This variable ranking allows us to avoid the painfully slow
 stepwise algorithms of [@Maugis2009b]. Thus, our method implemented
-in the R package SelvarMix, provides a much faster variable selection proce-
-dure than [@Maugis2009b;@Maugis2011] and allows us to study high-dimensional
+in the R package SelvarMix, provides a much faster variable selection procedure 
+than [@Maugis2009b;@Maugis2011] and allows us to study high-dimensional
 datasets.
 
 
