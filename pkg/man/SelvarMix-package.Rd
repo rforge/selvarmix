@@ -45,43 +45,20 @@
 }
 \examples{
 \dontrun{
-## Simulated data  example as shown in Maugis et al. (2009) (correlated scenario 2) 
-## n = 2000 observations, p = 14 variables 
-require(Rmixmod)
-require(glasso)
-data(scenarioCor)
-data.cor <- scenarioCor[,1:14]
-labels.cor <-scenarioCor[,15]
-
-
-lambda <- seq(20,  100, by = 10)
-rho <- seq(1, 2, length=2)
-hybrid.size <- 3
-models <- mixmodGaussianModel(family = "spherical", equal.proportions = TRUE)
-regModel <- c("LI","LB","LC")
-indepModel <- c("LI","LB")
-
+## wine data set 
+## n = 178 observations, p = 27 variables 
+data(wine)
 ## variable selection in model-based clustering  
-nbCluster <-  c(3,4)
-criterion <- "BIC"
-simulate.cl  <- SelvarClustLasso(data.cor, nbCluster, lambda, rho, hybrid.size, 
-                                 criterion, models, regModel, indepModel)
-
-
+set.seed(123)
+junk <- SelvarClustLasso(x=wine[,1:27], nbcluster=1:5, models=mixmodGaussianModel(family = "diagonal"), nbcores=4)
+summary(junk)
+print(junk)
 
 ## variables selection in discriminant analysis
-## training sample : n = 1900, p = 14 variables 
-data.learn <- scenarioCor[1:1900,1:14]
-labels.learn <-scenarioCor[1:1900,15]
-
-## testing sample : n = 100, p = 14 variables
-data.test <- scenarioCor[1901:2000,1:14]
-labels.test <-scenarioCor[1901:2000,15]
-
-lambda <- seq(20,  50, length = 10)
-
-simulate.da <- SelvarLearnLasso(data.learn, labels.learn, lambda, rho, hybrid.size, 
-                                models, regModel, indepModel, data.test, labels.test)
+set.seed(123)
+junk <- SelvarLearnLasso(x=wine[,1:27], z=wine[,28], models=mixmodGaussianModel(family = "diagonal"), nbcores=4)
+summary(junk)
+print(junk)
 }
 }
 \author{

@@ -121,11 +121,9 @@ Mohammed Sedki <\url{mohammed.sedki@u-psud.fr}>
 \dontrun{
 ## wine data set 
 ## n = 178 observations, p = 27 variables 
-require(Rmixmod)
-require(glasso)
 data(wine)
 set.seed(123)
-junk <- SelvarClustLasso(x=wine, nbcluster=1:5, models=mixmodGaussianModel(family = "diagonal"), nbcores=4)
+junk <- SelvarClustLasso(x=wine[,1:27], nbcluster=1:5, models=mixmodGaussianModel(family = "diagonal"), nbcores=4)
 summary(junk)
 print(junk)
 } 

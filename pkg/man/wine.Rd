@@ -12,12 +12,12 @@ The wines comes from from three different regions of Italy.
 \format{
   We have labels and data as follows :
  
-  The vector of labels cls : it indicates the class label 1,2 and 3.
+  The last column 28 of the data frame: it indicates the class label 1,2 and 3.
   
   %The first class of wines corresponds to the wines with labels starting with "OLO". The second class
   %corresponds to wines starting with "GRI". The third class wines start with "ERA".
   
-  The data matrix wine which involves the following columns : 
+  The data involving columns 1 to 27: 
    
    Alcohol                      
   
