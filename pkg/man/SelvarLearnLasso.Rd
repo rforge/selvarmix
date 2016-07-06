@@ -144,7 +144,8 @@ Mohammed Sedki <\url{mohammed.sedki@u-psud.fr}>
 ## n = 178 observations, p = 27 variables 
 data(wine)
 set.seed(123)
-junk <- SelvarLearnLasso(x=wine[,1:27], z=wine[,28], models=mixmodGaussianModel(family = "diagonal"), nbcores=4)
+junk <- SelvarLearnLasso(x=wine[,1:27], z=wine[,28], 
+                         models=mixmodGaussianModel(family = "diagonal"), nbcores=4)
 summary(junk)
 print(junk)
 }
