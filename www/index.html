@@ -132,8 +132,8 @@ $(document).ready(function () {
 <ul>
 <li><a href="#intro">Introduction</a>.</li>
 <li><a href="#tutorial">Tutorial (overview of the SelvarMix functions)</a>.</li>
-<li><a href="#simdata">Cluster analysis of a synthetic continuous data set</a>.</li>
-<li><a href="#simadataDA">Discriminant analysis of a synthetic continuous data set</a>.</li>
+<li><a href="#clust">Cluster analysis and variable selection with unknown number of clusters</a>.</li>
+<li><a href="#discrim">Discriminant analysis with variable selection</a>.</li>
 </ul>
 <p>All the experiments are used with SelvarMix 1.2 <a id="intro"></a></p>
 <div id="introduction" class="section level3">
@@ -171,7 +171,7 @@ b &lt;- cbind(c(0.5,1), c(2,0), c(0,3), c(-1,2), c(2,-4), c(0.5,0), c(4,0.5), c(
 x[,3:11] &lt;- c(0, 0, seq(0.4, 2, len=7)) + x[,1:2]%*%b + t(t(chol(omega)) %*% matrix(rnorm(n*9), 9, n)) 
 x[,12:14] &lt;- matrix(rnorm(3*n), n, 3)
 x[,12] &lt;- x[,12] + 3.2; x[,13] &lt;- x[,13] + 3.6; x[,13] &lt;- x[,13] + 4</code></pre>
-<p><strong>Clustering with variable selection and number of clusters selection</strong></p>
+<p><a id="clust"></a> <strong>Clustering with variable selection and number of clusters selection</strong></p>
 <pre class="r"><code># Cluster analysis with variable selection with parallel computing (8 cores) 
 # The last two input arguments are optional
 require(SelvarMix)</code></pre>
@@ -213,6 +213,107 @@ The SRUW model:
  R: 1 2 
  U: 3 4 5 6 7 8 9 10 11 
  W: 14 13 12 </code></pre>
+<ul>
+<li><a href="#top">Go to the top</a></li>
+</ul>
+<p><strong>Result print</strong></p>
+<pre class="r"><code># print clustering and regression parameters 
+print(junk)</code></pre>
+<pre><code>****************************************
+*** Cluster 1 
+* proportion =  0.2500 
+* means      =  3.0351 0.0084 
+* variances  = |     0.9684     0.0000 |
+               |     0.0000     0.9684 |
+*** Cluster 2 
+* proportion =  0.2500 
+* means      =  0.0404 3.0217 
+* variances  = |     0.9684     0.0000 |
+               |     0.0000     0.9684 |
+*** Cluster 3 
+* proportion =  0.2500 
+* means      =  2.9666 2.8858 
+* variances  = |     0.9684     0.0000 |
+               |     0.0000     0.9684 |
+*** Cluster 4 
+* proportion =  0.2500 
+* means      =  0.0220 -0.0612 
+* variances  = |     0.9684     0.0000 |
+               |     0.0000     0.9684 |
+****************************************
+Regression parameters:
+                  3           4          5          6          7
+intercept 0.8955058  0.91583873  0.9756543  0.9668664  0.9979245
+1         0.5086800  2.01156693 -0.0186641 -1.0231808  1.9828448
+2         1.0166012 -0.02518655  3.0110172  2.0015700 -4.0198483
+                     8         9         10        11
+intercept  0.846165781 0.8630311 0.88161925 0.8946564
+1          0.521229074 4.0049986 2.98323243 2.0136865
+2         -0.008883697 0.5097855 0.01598624 1.0115493</code></pre>
+<ul>
+<li><a href="#top">Go to the top</a></li>
+</ul>
+<p><a id="discrim"></a> <strong>Discriminant analysis with variable selection</strong></p>
+<pre class="r"><code># Discriminant analysis with learning and testing data
+# Variable selection with parallel computing (8 cores)
+xl &lt;- x[1:1900,]; xt &lt;- x[1901:2000,] 
+zl &lt;- z[1:1900]; zt &lt;- z[1901:2000]
+junk &lt;- SelvarLearnLasso(x=xl, z=zl, models=mixmodGaussianModel(family = &quot;spherical&quot;), xtest=xt, ztest=zt,nbcores=8)</code></pre>
+<pre><code>variable  ranking
+SRUW  selection with BIC criterion
+model selection with BIC criterion</code></pre>
+<p><strong>Model Summary</strong></p>
+<pre class="r"><code># Summary of the selected model
+summary(junk)</code></pre>
+<pre><code>Criterion: BIC 
+Criterion value: -90917.73 
+Number of clusters: 4 
+Gaussian mixutre model: Gaussian_p_L_I 
+Prediction error: 0.14 
+Regression covariance model: LC 
+Independent covariance model: LI 
+The SRUW model:
+ S: 1 2 
+ R: 1 2 
+ U: 3 4 5 6 7 8 9 10 11 
+ W: 14 13 12 </code></pre>
+<ul>
+<li><a href="#top">Go to the top</a></li>
+</ul>
+<p><strong>Result print</strong></p>
+<pre class="r"><code># print clustering and regression parameters 
+print(junk)</code></pre>
+<pre><code>****************************************
+*** Cluster 1 
+* proportion =  0.2500 
+* means      =  0.0348 -0.0533 
+* variances  = |     0.9721     0.0000 |
+               |     0.0000     0.9721 |
+*** Cluster 2 
+* proportion =  0.2500 
+* means      =  2.9986 0.0349 
+* variances  = |     0.9721     0.0000 |
+               |     0.0000     0.9721 |
+*** Cluster 3 
+* proportion =  0.2500 
+* means      =  0.0656 3.0287 
+* variances  = |     0.9721     0.0000 |
+               |     0.0000     0.9721 |
+*** Cluster 4 
+* proportion =  0.2500 
+* means      =  3.0066 2.8858 
+* variances  = |     0.9721     0.0000 |
+               |     0.0000     0.9721 |
+****************************************
+Regression parameters:
+                  3           4           5         6         7
+intercept 0.8855278  0.91073034  0.96793471  0.969374  1.005703
+1         0.5118310  2.01298787 -0.01485695 -1.023251  1.979198
+2         1.0239138 -0.02352075  3.01144447  1.997734 -4.019287
+                     8         9        10       11
+intercept  0.842400074 0.8593035 0.8677248 0.899352
+1          0.521734834 4.0069348 2.9883470 1.997643
+2         -0.004344507 0.5107485 0.0266206 1.014451</code></pre>
 <ul>
 <li><a href="#top">Go to the top</a></li>
 </ul>

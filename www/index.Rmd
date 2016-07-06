@@ -21,8 +21,8 @@ bibliography: biblio.bib
 
 * <a href="#intro">Introduction</a>.
 * <a href="#tutorial">Tutorial (overview of the SelvarMix functions)</a>.
-* <a href="#simdata">Cluster analysis of a synthetic continuous data set</a>.
-* <a href="#simadataDA">Discriminant analysis of a synthetic continuous data set</a>.
+* <a href="#clust">Cluster analysis  and variable selection with unknown number of clusters</a>.
+* <a href="#discrim">Discriminant analysis with variable selection</a>.
 
 All the experiments are used with SelvarMix 1.2
 <a id="intro"></a>
@@ -87,6 +87,7 @@ x[,12:14] <- matrix(rnorm(3*n), n, 3)
 x[,12] <- x[,12] + 3.2; x[,13] <- x[,13] + 3.6; x[,13] <- x[,13] + 4
 ```
 
+<a id="clust"></a>
 **Clustering with variable selection and number of clusters selection**
 ```{r, comment=""}
 # Cluster analysis with variable selection with parallel computing (8 cores) 
@@ -101,4 +102,37 @@ junk <- SelvarClustLasso(x=x, nbcluster=3:5, models=mixmodGaussianModel(family =
 # Summary of the selected model
 summary(junk)
 ```
+
 * <a href="#top">Go to the top</a>
+
+**Result print**
+```{r, comment=""}
+# print clustering and regression parameters 
+print(junk)
+```
+* <a href="#top">Go to the top</a>
+
+<a id="discrim"></a>
+**Discriminant analysis with variable selection**
+```{r, comment=""}
+# Discriminant analysis with learning and testing data
+# Variable selection with parallel computing (8 cores)
+xl <- x[1:1900,]; xt <- x[1901:2000,] 
+zl <- z[1:1900]; zt <- z[1901:2000]
+junk <- SelvarLearnLasso(x=xl, z=zl, models=mixmodGaussianModel(family = "spherical"), xtest=xt, ztest=zt,nbcores=8)
+```
+**Model Summary**
+
+```{r, comment=""}
+# Summary of the selected model
+summary(junk)
+```
+* <a href="#top">Go to the top</a>
+
+**Result print**
+```{r, comment=""}
+# print clustering and regression parameters 
+print(junk)
+```
+* <a href="#top">Go to the top</a>
+
