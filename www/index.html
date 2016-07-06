@@ -140,9 +140,6 @@ $(document).ready(function () {
 <h3>Introduction</h3>
 <p><em>SelvarMix</em> carries out a regularization approach of variable selection is considered in the model-based clustering and classification frameworks. First, the variables are arranged in order with a lasso-like procedure. Second, the method of <span class="citation">(Maugis, Celeux, and Martin-Magniette 2009; Maugis, Celeux, and Martin-Magniette 2011)</span> is adapted to define the role of variables in the two frameworks. This variable ranking allows us to avoid the painfully slow stepwise algorithms of <span class="citation">(Maugis, Celeux, and Martin-Magniette 2009)</span>. Thus, our method implemented in the R package SelvarMix, provides a much faster variable selection procedure than <span class="citation">(Maugis, Celeux, and Martin-Magniette 2009; Maugis, Celeux, and Martin-Magniette 2011)</span> and allows us to study high-dimensional datasets.</p>
 <p>Tool functions <em>summary and print</em> facilitate the result interpretation.</p>
-<ul>
-<li><a href="#top">Go to the top</a></li>
-</ul>
 <p><a id="tutorial"></a></p>
 </div>
 <div id="overview-of-the-selvarmix-functions" class="section level3">
@@ -171,6 +168,9 @@ b &lt;- cbind(c(0.5,1), c(2,0), c(0,3), c(-1,2), c(2,-4), c(0.5,0), c(4,0.5), c(
 x[,3:11] &lt;- c(0, 0, seq(0.4, 2, len=7)) + x[,1:2]%*%b + t(t(chol(omega)) %*% matrix(rnorm(n*9), 9, n)) 
 x[,12:14] &lt;- matrix(rnorm(3*n), n, 3)
 x[,12] &lt;- x[,12] + 3.2; x[,13] &lt;- x[,13] + 3.6; x[,13] &lt;- x[,13] + 4</code></pre>
+<ul>
+<li><a href="#top">Go to the top</a></li>
+</ul>
 <p><a id="clust"></a> <strong>Clustering with variable selection and number of clusters selection</strong></p>
 <pre class="r"><code># Cluster analysis with variable selection with parallel computing (8 cores) 
 # The last two input arguments are optional
@@ -222,12 +222,12 @@ print(junk)</code></pre>
 <pre><code>****************************************
 *** Cluster 1 
 * proportion =  0.2500 
-* means      =  3.0350 0.0084 
+* means      =  0.0404 3.0217 
 * variances  = |     0.9684     0.0000 |
                |     0.0000     0.9684 |
 *** Cluster 2 
 * proportion =  0.2500 
-* means      =  0.0404 3.0217 
+* means      =  3.0351 0.0084 
 * variances  = |     0.9684     0.0000 |
                |     0.0000     0.9684 |
 *** Cluster 3 

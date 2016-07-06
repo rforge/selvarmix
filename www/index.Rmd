@@ -41,7 +41,6 @@ datasets.
 
 Tool functions *summary and print*  facilitate the result interpretation.
 
-* <a href="#top">Go to the top</a>
 
 
 <a id="tutorial"></a>
@@ -86,6 +85,7 @@ x[,3:11] <- c(0, 0, seq(0.4, 2, len=7)) + x[,1:2]%*%b + t(t(chol(omega)) %*% mat
 x[,12:14] <- matrix(rnorm(3*n), n, 3)
 x[,12] <- x[,12] + 3.2; x[,13] <- x[,13] + 3.6; x[,13] <- x[,13] + 4
 ```
+* <a href="#top">Go to the top</a>
 
 <a id="clust"></a>
 **Clustering with variable selection and number of clusters selection**
