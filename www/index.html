@@ -122,32 +122,32 @@ $(document).ready(function () {
 <p><em>SelvarMix: A R package for variable selection in model-based clustering and discriminant analysis with a regularization approach.</em></p>
 <p><strong>Description:</strong></p>
 <ul>
-<li><em>Authors</em>: <strong>Mohammed A. Sedki</strong> and <strong>Cathy Maugis-Rabusseau</strong> and <strong>Gilles Celeux</strong>.</li>
+<li><em>Authors</em>: <strong>Gilles Celeux</strong> and <strong>Cathy Maugis-Rabusseau</strong> and <strong>Mohammed A. Sedki</strong>.</li>
 <li><em>License</em>: <a href="http://www.gnu.org/licenses/gpl-2.0.html">GPL-2</a>.</li>
 <li><p><em>Download SelvarMix 1.2 (beta version)</em>: <a href="http://r-forge.r-project.org/R/?group_id=2044">link</a>.</p></li>
 <li><em>Download SelvarMix 1.1 (cran version)</em>: <a href="http://cran.r-project.org/web/packages/SelvarMix/">link</a>.</li>
-<li><p><em>Reference</em>: <a href="https://hal.archives-ouvertes.fr/hal-01053784/">SelvarMix: A R package for variable selection in model-based clustering and discriminant analysis with a regularization approach</a>, Sedki, M. and Maugis-Rabusseau, C. and Celeux, G., 2016, preprint.</p></li>
+<li><p><em>Reference</em>: <a href="https://hal.archives-ouvertes.fr/hal-01053784/">SelvarMix: A R package for variable selection in model-based clustering and discriminant analysis with a regularization approach</a>, Celeux, G., and Maugis-Rabusseau, C. and Sedki, M. 2016, preprint.</p></li>
 </ul>
 <p><a id="top"></a> <strong>Site map:</strong></p>
 <ul>
 <li><a href="#intro">Introduction</a>.</li>
-<li><a href="#tutorial">Tutorial (overview of the SelvarMix functions)</a>.</li>
-<li><a href="#clust">Cluster analysis and variable selection with unknown number of clusters</a>.</li>
-<li><a href="#discrim">Discriminant analysis with variable selection</a>.</li>
+<li><a href="#dataset">Synthetic dataset</a>.</li>
+<li><a href="#clust">Variable selection in model-based clustering</a>.</li>
+<li><a href="#discrim">Variable selection in classification</a>.</li>
 </ul>
-<p>All the experiments are used with SelvarMix 1.2 <a id="intro"></a></p>
+<p>All the experiments are implemented with SelvarMix 1.2 <a id="intro"></a></p>
 <div id="introduction" class="section level3">
 <h3>Introduction</h3>
-<p><em>SelvarMix</em> carries out a regularization approach of variable selection is considered in the model-based clustering and classification frameworks. First, the variables are arranged in order with a lasso-like procedure. Second, the method of <span class="citation">(Maugis, Celeux, and Martin-Magniette 2009; Maugis, Celeux, and Martin-Magniette 2011)</span> is adapted to define the role of variables in the two frameworks. This variable ranking allows us to avoid the painfully slow stepwise algorithms of <span class="citation">(Maugis, Celeux, and Martin-Magniette 2009)</span>. Thus, our method implemented in the R package SelvarMix, provides a much faster variable selection procedure than <span class="citation">(Maugis, Celeux, and Martin-Magniette 2009; Maugis, Celeux, and Martin-Magniette 2011)</span> and allows us to study high-dimensional datasets.</p>
+<p><em>SelvarMix</em> package carries out a regularization approach of variable selection in the model-based clustering and classification frameworks. First, the variables are arranged in order with a lasso-like procedure. Second, the method of <span class="citation">(Maugis, Celeux, and Martin-Magniette 2009; Maugis, Celeux, and Martin-Magniette 2011)</span> is adapted to define the role of variables in the two frameworks. This variable ranking allows us to avoid the painfully slow stepwise algorithms of <span class="citation">(Maugis, Celeux, and Martin-Magniette 2009)</span>. Thus, SelvarMix provides a much faster variable selection procedure than <span class="citation">(Maugis, Celeux, and Martin-Magniette 2009; Maugis, Celeux, and Martin-Magniette 2011)</span> and allows us to study high-dimensional datasets.</p>
 <p>Tool functions <em>summary and print</em> facilitate the result interpretation.</p>
-<p><a id="tutorial"></a></p>
 </div>
 <div id="overview-of-the-selvarmix-functions" class="section level3">
 <h3>Overview of the SelvarMix functions</h3>
 <p>This section performs the whole analysis of a simulated data set . It uses all the functions implemented in the package <em>SelvarMix</em> and can be used as a tutorial.</p>
-<p>The cluster analysis is performed with unknown number of clusters by doing a variable selection, then a model summary is given.</p>
+<p>The cluster analysis is performed with unknown number of clusters. We use an information criterion for variable selection and choosing the number of clusters. To display the winning model, the summary is given.</p>
 <p><strong>The synthetic dataset</strong></p>
 <p>The simulated dataset consists of 2000 data points in <span class="math inline">\(\mathbb{R}^{14}\)</span>. On the subset of relevant clustering variables <span class="math inline">\(S = \{1, 2\}\)</span>, data are distributed from a mixture of four equiprobable spherical Gaussian distributions with means <span class="math inline">\((0,0), (3,0)  (0,3)\)</span> and <span class="math inline">\((3,3)\)</span>. The subset of redundant variables is <span class="math inline">\(U =\{3-11\}\)</span> that are explained by the subset of predictor variables <span class="math inline">\(R = \{1,2\}\)</span>. The last three variables are independent <span class="math inline">\(W = \{12, 13, 14\}\)</span>. More details are given in <span class="citation">(Maugis, Celeux, and Martin-Magniette 2009)</span>.</p>
+<p><a id="tutorial"></a></p>
 <pre class="r"><code>set.seed(123)
 n &lt;- 2000; p &lt;- 14
 x &lt;- matrix(0,n, p)
@@ -171,7 +171,7 @@ x[,12] &lt;- x[,12] + 3.2; x[,13] &lt;- x[,13] + 3.6; x[,13] &lt;- x[,13] + 4</c
 <ul>
 <li><a href="#top">Go to the top</a></li>
 </ul>
-<p><a id="clust"></a> <strong>Clustering with variable selection and number of clusters selection</strong></p>
+<p><a id="clust"></a> <strong>Variable selection and selection of the number of clusters in the clustering framework</strong></p>
 <pre class="r"><code># Cluster analysis with variable selection with parallel computing (8 cores) 
 # The last two input arguments are optional
 require(SelvarMix)</code></pre>
@@ -195,13 +195,13 @@ Please report bugs at: http://www.mixmod.org/article.php3?id_article=23
 
 More information on : www.mixmod.org</code></pre>
 <pre><code>Loading required package: parallel</code></pre>
-<pre class="r"><code>junk &lt;- SelvarClustLasso(x=x, nbcluster=3:5, models=mixmodGaussianModel(family = &quot;spherical&quot;), nbcores=8)</code></pre>
+<pre class="r"><code>obj &lt;- SelvarClustLasso(x=x, nbcluster=3:5, models=mixmodGaussianModel(family = &quot;spherical&quot;), nbcores=8)</code></pre>
 <pre><code>variable  ranking
 SRUW selection with BIC criterion
 model selection  with BIC criterion</code></pre>
 <p><strong>Model Summary</strong></p>
 <pre class="r"><code># Summary of the selected model
-summary(junk)</code></pre>
+summary(obj)</code></pre>
 <pre><code>Criterion: BIC 
 Criterion value: -94401.89 
 Number of clusters: 4 
@@ -218,7 +218,7 @@ The SRUW model:
 </ul>
 <p><strong>Result print</strong></p>
 <pre class="r"><code># print clustering and regression parameters 
-print(junk)</code></pre>
+print(obj)</code></pre>
 <pre><code>****************************************
 *** Cluster 1 
 * proportion =  0.2500 
@@ -232,12 +232,12 @@ print(junk)</code></pre>
                |     0.0000     0.9684 |
 *** Cluster 3 
 * proportion =  0.2500 
-* means      =  0.0219 -0.0611 
+* means      =  0.0220 -0.0611 
 * variances  = |     0.9684     0.0000 |
                |     0.0000     0.9684 |
 *** Cluster 4 
 * proportion =  0.2500 
-* means      =  2.9666 2.8857 
+* means      =  2.9666 2.8858 
 * variances  = |     0.9684     0.0000 |
                |     0.0000     0.9684 |
 ****************************************
@@ -258,13 +258,13 @@ intercept  0.846165781 0.8630311 0.88161925 0.8946564
 # Variable selection with parallel computing (8 cores)
 xl &lt;- x[1:1900,]; xt &lt;- x[1901:2000,] 
 zl &lt;- z[1:1900]; zt &lt;- z[1901:2000]
-junk &lt;- SelvarLearnLasso(x=xl, z=zl, models=mixmodGaussianModel(family = &quot;spherical&quot;), xtest=xt, ztest=zt,nbcores=8)</code></pre>
+obj &lt;- SelvarLearnLasso(x=xl, z=zl, models=mixmodGaussianModel(family = &quot;spherical&quot;), xtest=xt, ztest=zt,nbcores=8)</code></pre>
 <pre><code>variable  ranking
 SRUW  selection with BIC criterion
 model selection with BIC criterion</code></pre>
 <p><strong>Model Summary</strong></p>
 <pre class="r"><code># Summary of the selected model
-summary(junk)</code></pre>
+summary(obj)</code></pre>
 <pre><code>Criterion: BIC 
 Criterion value: -90917.73 
 Number of clusters: 4 
@@ -282,7 +282,7 @@ The SRUW model:
 </ul>
 <p><strong>Result print</strong></p>
 <pre class="r"><code># print clustering and regression parameters 
-print(junk)</code></pre>
+print(obj)</code></pre>
 <pre><code>****************************************
 *** Cluster 1 
 * proportion =  0.2500 

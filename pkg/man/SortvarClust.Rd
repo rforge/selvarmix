@@ -81,7 +81,7 @@ require(Rmixmod)
 require(glasso)
 data(wine)
 set.seed(123)
-junk <- SortvarClust(x=wine, nbcluster=1:5, nbcores=4)
+obj <- SortvarClust(x=wine, nbcluster=1:5, nbcores=4)
 }
 }
 \keyword{Variable ranking}

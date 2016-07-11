@@ -8,49 +8,48 @@ bibliography: biblio.bib
 
 **Description:**
 
-* *Authors*: **Mohammed A. Sedki** and **Cathy Maugis-Rabusseau** and **Gilles Celeux**.
+* *Authors*: **Gilles Celeux** and **Cathy Maugis-Rabusseau** and **Mohammed A. Sedki**.
 * *License*: [GPL-2](http://www.gnu.org/licenses/gpl-2.0.html).
 * *Download SelvarMix 1.2 (beta version)*: [link](http://r-forge.r-project.org/R/?group_id=2044). 
 
 *  *Download SelvarMix 1.1 (cran version)*: [link](http://cran.r-project.org/web/packages/SelvarMix/).
-* *Reference*: [SelvarMix: A R package for variable selection in model-based clustering and discriminant analysis with a regularization approach](https://hal.archives-ouvertes.fr/hal-01053784/), Sedki, M. and Maugis-Rabusseau, C. and Celeux, G., 2016, preprint.
+* *Reference*: [SelvarMix: A R package for variable selection in model-based clustering and discriminant analysis with a regularization approach](https://hal.archives-ouvertes.fr/hal-01053784/), Celeux, G., and Maugis-Rabusseau, C. and Sedki, M. 2016, preprint.
 
 
 <a id="top"></a>
 **Site map:**  
 
 * <a href="#intro">Introduction</a>.
-* <a href="#tutorial">Tutorial (overview of the SelvarMix functions)</a>.
-* <a href="#clust">Cluster analysis  and variable selection with unknown number of clusters</a>.
-* <a href="#discrim">Discriminant analysis with variable selection</a>.
+* <a href="#dataset">Synthetic dataset</a>.
+* <a href="#clust">Variable selection in model-based clustering</a>.
+* <a href="#discrim">Variable selection in classification</a>.
 
-All the experiments are used with SelvarMix 1.2
+All the experiments are implemented with SelvarMix 1.2
 <a id="intro"></a>
 
 ### Introduction
-*SelvarMix* carries out a regularization approach of variable selection is considered 
-in the model-based clustering and classification frameworks. First, the
+*SelvarMix* package carries out a regularization approach of variable selection in the model-based clustering and classification 
+frameworks. First, the
 variables are arranged in order with a lasso-like procedure. Second, the method
 of [@Maugis2009b; @Maugis2011] is adapted to define the role of variables in the
 two frameworks. This variable ranking allows us to avoid the painfully slow
-stepwise algorithms of [@Maugis2009b]. Thus, our method implemented
-in the R package SelvarMix, provides a much faster variable selection procedure 
-than [@Maugis2009b;@Maugis2011] and allows us to study high-dimensional
-datasets.
+stepwise algorithms of [@Maugis2009b]. Thus, SelvarMix provides a much 
+faster variable selection procedure than [@Maugis2009b;@Maugis2011] and allows 
+us to study high-dimensional datasets.
 
 
 Tool functions *summary and print*  facilitate the result interpretation.
 
 
 
-<a id="tutorial"></a>
+
 
 ###  Overview of the SelvarMix functions
 This section performs the whole analysis of a simulated  data set . 
 It uses all the functions implemented in the package *SelvarMix* and can be used as a tutorial. 
 
-The cluster analysis is performed with unknown number of clusters by doing a variable selection, 
-then a model summary is given. 
+The cluster analysis is performed with unknown number of clusters. We use an information criterion for variable
+selection and choosing the number of clusters.  To display the winning model, the summary is given. 
 
 **The synthetic dataset**
 
@@ -63,6 +62,7 @@ then a model summary is given.
  predictor variables $R = \{1,2\}$. 
  The last three variables are independent $W = \{12, 13, 14\}$. More details are given in [@Maugis2009b].
 
+<a id="tutorial"></a>
 ```{r, comment=""}
 set.seed(123)
 n <- 2000; p <- 14
@@ -88,19 +88,19 @@ x[,12] <- x[,12] + 3.2; x[,13] <- x[,13] + 3.6; x[,13] <- x[,13] + 4
 * <a href="#top">Go to the top</a>
 
 <a id="clust"></a>
-**Clustering with variable selection and number of clusters selection**
+**Variable selection and selection of the number of clusters in the clustering framework**
 ```{r, comment=""}
 # Cluster analysis with variable selection with parallel computing (8 cores) 
 # The last two input arguments are optional
 require(SelvarMix)
-junk <- SelvarClustLasso(x=x, nbcluster=3:5, models=mixmodGaussianModel(family = "spherical"), nbcores=8)
+obj <- SelvarClustLasso(x=x, nbcluster=3:5, models=mixmodGaussianModel(family = "spherical"), nbcores=8)
 ```
 
 **Model Summary**
 
 ```{r, comment=""}
 # Summary of the selected model
-summary(junk)
+summary(obj)
 ```
 
 * <a href="#top">Go to the top</a>
@@ -108,7 +108,7 @@ summary(junk)
 **Result print**
 ```{r, comment=""}
 # print clustering and regression parameters 
-print(junk)
+print(obj)
 ```
 * <a href="#top">Go to the top</a>
 
@@ -119,20 +119,20 @@ print(junk)
 # Variable selection with parallel computing (8 cores)
 xl <- x[1:1900,]; xt <- x[1901:2000,] 
 zl <- z[1:1900]; zt <- z[1901:2000]
-junk <- SelvarLearnLasso(x=xl, z=zl, models=mixmodGaussianModel(family = "spherical"), xtest=xt, ztest=zt,nbcores=8)
+obj <- SelvarLearnLasso(x=xl, z=zl, models=mixmodGaussianModel(family = "spherical"), xtest=xt, ztest=zt,nbcores=8)
 ```
 **Model Summary**
 
 ```{r, comment=""}
 # Summary of the selected model
-summary(junk)
+summary(obj)
 ```
 * <a href="#top">Go to the top</a>
 
 **Result print**
 ```{r, comment=""}
 # print clustering and regression parameters 
-print(junk)
+print(obj)
 ```
 * <a href="#top">Go to the top</a>
 

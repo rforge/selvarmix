@@ -50,17 +50,17 @@
 data(wine)
 ## variable selection in model-based clustering  
 set.seed(123)
-junk <- SelvarClustLasso(x=wine[,1:27], nbcluster=1:5, 
+obj <- SelvarClustLasso(x=wine[,1:27], nbcluster=1:5, 
                          models=mixmodGaussianModel(family = "diagonal"), nbcores=4)
-summary(junk)
-print(junk)
+summary(obj)
+print(obj)
 
 ## variables selection in discriminant analysis
 set.seed(123)
-junk <- SelvarLearnLasso(x=wine[,1:27], z=wine[,28],
+obj <- SelvarLearnLasso(x=wine[,1:27], z=wine[,28],
                          models=mixmodGaussianModel(family = "diagonal"), nbcores=4)
-summary(junk)
-print(junk)
+summary(obj)
+print(obj)
 }
 }
 \author{

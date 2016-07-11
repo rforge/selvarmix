@@ -82,7 +82,7 @@ require(Rmixmod)
 require(glasso)
 data(wine)
 set.seed(123)
-junk <- SortvarLearn(x=wine, z=cls, nbcores=4)
+obj <- SortvarLearn(x=wine, z=cls, nbcores=4)
 }
 }
 \keyword{Variable ranking}
