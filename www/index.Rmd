@@ -113,7 +113,7 @@ print(obj)
 * <a href="#top">Go to the top</a>
 
 <a id="discrim"></a>
-**Discriminant analysis with variable selection**
+**Variable selection in classification**
 ```{r, comment=""}
 # Discriminant analysis with learning and testing data
 # Variable selection with parallel computing (8 cores)
