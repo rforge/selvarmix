@@ -138,15 +138,15 @@ $(document).ready(function () {
 <p>All the experiments are implemented with SelvarMix 1.2 <a id="intro"></a></p>
 <div id="introduction" class="section level3">
 <h3>Introduction</h3>
-<p><em>SelvarMix</em> package carries out a regularization approach of variable selection in the model-based clustering and classification frameworks. First, the variables are arranged in order with a lasso-like procedure. Second, the method of <span class="citation">(Maugis, Celeux, and Martin-Magniette 2009; Maugis, Celeux, and Martin-Magniette 2011)</span> is adapted to define the role of variables in the two frameworks. This variable ranking allows us to avoid the painfully slow stepwise algorithms of <span class="citation">(Maugis, Celeux, and Martin-Magniette 2009)</span>. Thus, SelvarMix provides a much faster variable selection procedure than <span class="citation">(Maugis, Celeux, and Martin-Magniette 2009; Maugis, Celeux, and Martin-Magniette 2011)</span> and allows us to study high-dimensional datasets.</p>
+<p><em>SelvarMix</em> package carries out a regularization approach of variable selection in the model-based clustering and classification frameworks. First, the variables are ranked with a lasso-like procedure. Second, the method of <span class="citation">(Maugis, Celeux, and Martin-Magniette 2009; Maugis, Celeux, and Martin-Magniette 2011)</span> is adapted to define the role of variables in the two frameworks. This variable ranking allows us to avoid the painfully slow stepwise forward or backward algorithms of <span class="citation">(Maugis, Celeux, and Martin-Magniette 2009)</span>. Thus, SelvarMix provides a much faster variable selection procedure than <span class="citation">(Maugis, Celeux, and Martin-Magniette 2009; Maugis, Celeux, and Martin-Magniette 2011)</span> allowing to study high-dimensional datasets.</p>
 <p>Tool functions <em>summary and print</em> facilitate the result interpretation.</p>
 </div>
 <div id="overview-of-the-selvarmix-functions" class="section level3">
 <h3>Overview of the SelvarMix functions</h3>
-<p>This section performs the whole analysis of a simulated data set . It uses all the functions implemented in the package <em>SelvarMix</em> and can be used as a tutorial.</p>
-<p>The cluster analysis is performed with unknown number of clusters. We use an information criterion for variable selection and choosing the number of clusters. To display the winning model, the summary is given.</p>
+<p>This section presents the whole analysis of a simulated data set. It makes use all the functions implemented in the package <em>SelvarMix</em> and may be regarded as a tutorial.</p>
+<p>The cluster analysis is performed with an unknown number of clusters. An information criterion is used for variable selection and choosing the number of clusters. The chosen model is described in a summary.</p>
 <p><strong>The synthetic dataset</strong></p>
-<p>The simulated dataset consists of 2000 data points in <span class="math inline">\(\mathbb{R}^{14}\)</span>. On the subset of relevant clustering variables <span class="math inline">\(S = \{1, 2\}\)</span>, data are distributed from a mixture of four equiprobable spherical Gaussian distributions with means <span class="math inline">\((0,0), (3,0)  (0,3)\)</span> and <span class="math inline">\((3,3)\)</span>. The subset of redundant variables is <span class="math inline">\(U =\{3-11\}\)</span> that are explained by the subset of predictor variables <span class="math inline">\(R = \{1,2\}\)</span>. The last three variables are independent <span class="math inline">\(W = \{12, 13, 14\}\)</span>. More details are given in <span class="citation">(Maugis, Celeux, and Martin-Magniette 2009)</span>.</p>
+<p>The simulated dataset consists of 2000 data points in <span class="math inline">\(\mathbb{R}^{14}\)</span>. On the subset of relevant clustering variables <span class="math inline">\(S = \{1, 2\}\)</span>, data are distributed according to a mixture of four equiprobable spherical Gaussian distributions with means <span class="math inline">\((0,0), (3,0)  (0,3)\)</span> and <span class="math inline">\((3,3)\)</span>. The subset of redundant variables is <span class="math inline">\(U =\{3-11\}\)</span>. These variables are explained by the subset of predictor variables <span class="math inline">\(R = \{1,2\}\)</span> through a linear regression. The last three variables <span class="math inline">\(W = \{12, 13, 14\}\)</span> are independent. More details are given in <span class="citation">(Maugis, Celeux, and Martin-Magniette 2009)</span>.</p>
 <p><a id="tutorial"></a></p>
 <pre class="r"><code>set.seed(123)
 n &lt;- 2000; p &lt;- 14
@@ -227,12 +227,12 @@ print(obj)</code></pre>
                |     0.0000     0.9684 |
 *** Cluster 2 
 * proportion =  0.2500 
-* means      =  3.0351 0.0084 
+* means      =  0.0404 3.0217 
 * variances  = |     0.9684     0.0000 |
                |     0.0000     0.9684 |
 *** Cluster 3 
 * proportion =  0.2500 
-* means      =  0.0404 3.0217 
+* means      =  3.0350 0.0084 
 * variances  = |     0.9684     0.0000 |
                |     0.0000     0.9684 |
 *** Cluster 4 

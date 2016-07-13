@@ -30,12 +30,12 @@ All the experiments are implemented with SelvarMix 1.2
 ### Introduction
 *SelvarMix* package carries out a regularization approach of variable selection in the model-based clustering and classification 
 frameworks. First, the
-variables are arranged in order with a lasso-like procedure. Second, the method
+variables are ranked with a lasso-like procedure. Second, the method
 of [@Maugis2009b; @Maugis2011] is adapted to define the role of variables in the
 two frameworks. This variable ranking allows us to avoid the painfully slow
-stepwise algorithms of [@Maugis2009b]. Thus, SelvarMix provides a much 
-faster variable selection procedure than [@Maugis2009b;@Maugis2011] and allows 
-us to study high-dimensional datasets.
+stepwise forward or backward algorithms of [@Maugis2009b]. Thus, SelvarMix provides a much 
+faster variable selection procedure than [@Maugis2009b;@Maugis2011] allowing
+to study high-dimensional datasets.
 
 
 Tool functions *summary and print*  facilitate the result interpretation.
@@ -45,22 +45,22 @@ Tool functions *summary and print*  facilitate the result interpretation.
 
 
 ###  Overview of the SelvarMix functions
-This section performs the whole analysis of a simulated  data set . 
-It uses all the functions implemented in the package *SelvarMix* and can be used as a tutorial. 
+This section presents the whole analysis of a simulated  data set. 
+It makes use all the functions implemented in the package *SelvarMix* and may be regarded as a tutorial. 
 
-The cluster analysis is performed with unknown number of clusters. We use an information criterion for variable
-selection and choosing the number of clusters.  To display the winning model, the summary is given. 
+The cluster analysis is performed with an unknown number of clusters. An information criterion is used for variable
+selection and choosing the number of clusters.  The chosen model is described in a summary. 
 
 **The synthetic dataset**
 
  The simulated dataset consists of 2000 data points in $\mathbb{R}^{14}$. 
  On the subset of relevant clustering variables $S = \{1, 2\}$, 
- data are distributed from a mixture of four equiprobable 
+ data are distributed according to a mixture of four equiprobable 
  spherical Gaussian distributions with means $(0,0), (3,0)
  (0,3)$ and $(3,3)$. The subset of redundant variables 
- is $U =\{3-11\}$ that are explained by the subset of 
- predictor variables $R = \{1,2\}$. 
- The last three variables are independent $W = \{12, 13, 14\}$. More details are given in [@Maugis2009b].
+ is $U =\{3-11\}$. These variables are explained by the subset of 
+ predictor variables $R = \{1,2\}$ through a linear regression. 
+ The last three variables $W = \{12, 13, 14\}$ are independent. More details are given in [@Maugis2009b].
 
 <a id="tutorial"></a>
 ```{r, comment=""}
