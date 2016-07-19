@@ -123,8 +123,7 @@ Mohammed Sedki <\url{mohammed.sedki@u-psud.fr}>
 ## n = 178 observations, p = 27 variables 
 data(wine)
 set.seed(123)
-obj <- SelvarClustLasso(x=wine[,1:27], nbcluster=1:5, 
-                         models=mixmodGaussianModel(family = "diagonal"), nbcores=4)
+obj <- SelvarClustLasso(x=wine[,1:27], nbcluster=1:5, nbcores=4)
 summary(obj)
 print(obj)
 } 

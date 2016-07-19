@@ -48,7 +48,8 @@ List CritClust::ClustBestModel(vector<int> numExp)
     Named("model") = bestResult.slot("model"),
     Named("parameters") = bestResult.slot("parameters"),
     Named("proba") = bestResult.slot("proba"),
-    Named("partition") = bestResult.slot("partition"));
+    Named("partition") = bestResult.slot("partition"),
+    Named("error") = bestResult.slot("error"));
     
   }
   else
