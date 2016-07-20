@@ -24,20 +24,20 @@ SelvarClustLasso(x, nbcluster, lambda, rho, type, rank, hsize, criterion,
  numeric listing of the number of clusters (must be positive integers)
 }
   \item{lambda}{
-  numeric listing of the tuning parameter for \eqn{\ell_1} mean penalty
+  numeric listing of the tuning parameters for \eqn{\ell_1} mean penalty
 }
   \item{rho}{
-  numeric listing of the tuning parameter for \eqn{\ell_1} precision matrix penalty
+  numeric listing of the tuning parameters for \eqn{\ell_1} precision matrix penalty
 }
  
  \item{type}{character defining the type of ranking procedure, must be "lasso" or "likelihood". Default is "lasso"}
 
 
   \item{rank}{
-  integer listing the rank of variables with (the length must be equal to the number of columns in x)
+  integer listing the rank of variables with (the length this vector must be equal to the number of variables in the dataset)
 }
 \item{hsize}{
-optional parameter make less strength  the hybrid forward and backward 
+optional parameter make less strength  the forward and backward 
 algorithms to select \eqn{S} and \eqn{W} sets
 }
 
@@ -67,7 +67,7 @@ algorithms to select \eqn{S} and \eqn{W} sets
   Default is c("LI", LB")}
 
 \item{nbcores}{
-  number of CPUs to be used when parallel computing is utilized (default is 2)
+  number of CPUs to be used when parallel computing is used (default is 2)
   }
 }
 
@@ -80,7 +80,7 @@ algorithms to select \eqn{S} and \eqn{W} sets
 \item{nbcluster}{The selected number of clusters}
 \item{model}{The selected Gaussian mixture form} %% the selected gaussian mixture form
 \item{rmodel }{The  selected covariance form for the regression}
-\item{imodel}{The selected covariance form for the independent gaussian distribution}
+\item{imodel}{The selected covariance form for the independent Gaussian distribution}
 \item{parameters}{Rmixmod [\code{\linkS4class{Parameter}}] object containing all mixture parameters}
 \item{regparameters}{Matrix containing all regression coefficients, each column is the regression coefficients of one 
 redundant variable on the selected R set}

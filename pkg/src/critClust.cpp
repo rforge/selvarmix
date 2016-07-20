@@ -73,7 +73,8 @@ List CritClust::ClustBestModel(vector<int> numExp)
                         Named("criterion") = "BIC",
                         Named("parameters") = bestResult.slot("parameters"),
                         Named("nbcluster") = bestResult.slot("nbCluster"),
-                        Named("partition") = bestResult.slot("partition"));
+                        Named("partition") = bestResult.slot("partition"),
+                        Named("error") = bestResult.slot("error"));
   };
   
 };

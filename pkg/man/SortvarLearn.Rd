@@ -19,20 +19,17 @@ SortvarLearn(x, z, type, lambda, rho, nbcores)
 }
 
 \item{z}{
-  an integer vector or a factor of size
-  number of observations. Each cell corresponds to a
-  cluster affectation. So the maximum value is the number
-  of clusters.
+  an integer vector or a factor corresponding to labels of data.
 }
 
 \item{type}{character defining the type of ranking procedure, must be "lasso" or "likelihood". Default is "lasso"}
 
 
   \item{lambda}{
-  numeric listing of tuning parameter for \eqn{\ell_1} mean penalty
+  numeric listing of tuning parameters for \eqn{\ell_1} mean penalty
 }
   \item{rho}{
-  numeric listing of tuning parameter for \eqn{\ell_1} precision matrix penalty
+  numeric listing of tuning parameters for \eqn{\ell_1} precision matrix penalty
 }
 
 \item{nbcores}{
@@ -82,7 +79,7 @@ require(Rmixmod)
 require(glasso)
 data(wine)
 set.seed(123)
-obj <- SortvarLearn(x=wine, z=cls, nbcores=4)
+obj <- SortvarLearn(x=wine[,1:27], z=wine[,28], nbcores=4)
 }
 }
 \keyword{Variable ranking}

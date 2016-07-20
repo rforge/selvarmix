@@ -29,14 +29,14 @@
   The most achieved model in model-based clustering
   has been proposed by Maugis et al (2009). This 
   so-called \eqn{SRUW} modeling considers three roles
-  of variables: one variable my belong to the relevant 
+  of variables: one variable may belong to the relevant 
   clustering set \eqn{S}, the redundant variable set
   \eqn{U} or the independent variable set \eqn{W}. 
   Moreover, the redundant variables may be explained 
   by a subset \eqn{R} of the relevant variables \eqn{S}.
-  In order to avoid the slow of this algorithm when data 
-  with numerous variables are studied, the SelvarMix procedure
-  is proposed. It proceeds in two steps: First, the variables
+  In order to avoid the greedy algorithms when high-dimensional data 
+  are studied, the SelvarMix procedure is proposed. 
+  It proceeds in two steps: First, the variables
   are ranked using a lasso-like procedure analogous to the one of 
   Zhou et al (2009); second, the \eqn{SRUW} procedure is run 
   on this  ranked set of  variables. 
@@ -50,15 +50,15 @@
 data(wine)
 ## variable selection in model-based clustering  
 set.seed(123)
-obj <- SelvarClustLasso(x=wine[,1:27], nbcluster=1:5, 
-                         models=mixmodGaussianModel(family = "diagonal"), nbcores=4)
+obj <- SelvarClustLasso(x=wine[,1:27], nbcluster=1:5, nbcores=4)
 summary(obj)
 print(obj)
 
 ## variables selection in discriminant analysis
 set.seed(123)
-obj <- SelvarLearnLasso(x=wine[,1:27], z=wine[,28],
-                         models=mixmodGaussianModel(family = "diagonal"), nbcores=4)
+a <- seq(1, 178, 10)
+b <- setdiff(1:178, a)
+obj <- SelvarLearnLasso(x=wine[b,1:27], z=wine[b,28], xt=wine[a,1:27], zt=wine[a,28], nbcores=4)
 summary(obj)
 print(obj)
 }

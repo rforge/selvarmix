@@ -5,17 +5,14 @@
 Wine data set
 }
 \description{
-This data set is made of 178 observations (italian wines)  described by 27 variables (physicochemical measures).
-The wines comes from from three different regions of Italy.
+This data set is made of 178 observations (Italian wines)  described by 27 variables (physicochemical measures).
+These wines come from from three different regions of Italy.
 }
 \usage{data("wine")}
 \format{
   We have labels and data as follows :
  
-  The last column 28 of the data frame: it indicates the class label 1,2 and 3.
-  
-  %The first class of wines corresponds to the wines with labels starting with "OLO". The second class
-  %corresponds to wines starting with "GRI". The third class wines start with "ERA".
+  The last column of the data frame (wine[,28]): it indicates the class label 1,2 or 3.
   
   The data involving columns 1 to 27: 
    

@@ -81,7 +81,7 @@ SelvarLearnLasso <-
                    rmodel=bestModel$rmodel,
                    imodel=bestModel$imodel,
                    parameters=bestModel$parameters,
-                   nbcluster=bestModel$nbcluster,
+                   #nbcluster=bestModel$nbcluster,
                    partition=bestModel$partition,
                    proba=bestModel$proba,
                    error=bestModel$error,

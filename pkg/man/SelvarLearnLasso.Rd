@@ -26,33 +26,27 @@ SelvarLearnLasso(x, z, lambda, rho, type, rank, hsize,  models,
 }
 
 \item{z}{
-  an integer vector or a factor of size
-  number of observations. Each cell corresponds to a
-  cluster affectation 
+  an integer vector or a factor corresponding to labels of data.
 }
 
  \item{lambda}{
-  numeric listing of tuning parameter for \eqn{\ell_1} mean penalty
+  numeric listing of tuning parameters for \eqn{\ell_1} mean penalty
 }
   \item{rho}{
-  numeric listing of tuning parameter for \eqn{\ell_1} precision matrix penalty
+  numeric listing of tuning parameters for \eqn{\ell_1} precision matrix penalty
 }
 
  \item{type}{character defining the type of ranking procedure, must be "lasso" or "likelihood". Default is "lasso"}
 
 
   \item{rank}{
-  integer listing the rank of variables with (the length must be equal to the number of columns in x)
+  integer listing the rank of variables with (the length of this vector must be equal to the number of variables in the dataset)
 }
 
 \item{hsize}{
-optional parameter make less strength  the hybrid forward and backward 
+optional parameter make less strength  the forward and backward 
 algorithms to select \eqn{S} and \eqn{W} sets
 }
-
-%\item{criterion}{character defining the criterion
-%  to select the best model. The selected model is the one with
-%  the lowest criterion value. Possible values: "BIC".}
 
 \item{models}{a  Rmixmod [\code{\linkS4class{Model}}] object
   defining the list of models to run. The models 
@@ -86,7 +80,7 @@ algorithms to select \eqn{S} and \eqn{W} sets
 }
 
 \item{nbcores}{
-number of CPUs to be used when parallel computing is utilized (default is 2)
+number of CPUs to be used when parallel computing is used (default is 2)
 }
 }
 
@@ -97,7 +91,7 @@ number of CPUs to be used when parallel computing is utilized (default is 2)
 \item{U }{The selected set of redundant variables}
 \item{W }{The selected set of independent variables}
 \item{criterionValue}{The criterion value for the selected model}
-\item{nbcluster}{The selected number of clusters}
+%\item{nbcluster}{The selected number of clusters}
 \item{model}{The selected covariance model} %% the selected gaussian mixture form
 \item{rmodel}{The  selected covariance form for the regression}
 \item{imodel}{The selected covariance form for the independent variables}
@@ -105,8 +99,8 @@ number of CPUs to be used when parallel computing is utilized (default is 2)
 \item{regparameters}{Matrix containing all regression coefficients, each column is the regression coefficients of one 
 redundant variable on the selected R set}
 \item{proba}{Optional : matrix containing the conditional probabilities of belonging to each cluster for the testing observations}
-\item{partition}{Optional: vector containing the cluster assignments of the testing observations according to the Maximum-a-Posteriori rule}
-\item{error }{Optional : error rate done by the predicted partition (obtained using Maximum-A-Posteriori rule)}
+\item{partition}{Optional: vector containing the cluster assignments of the testing observations according to the Maximum-a-Posteriori rule. When testing dataset is missed, we use the training dataset as testing one}
+\item{error }{Optional : error rate done by the predicted partition (obtained using Maximum-A-Posteriori rule). When testing dataset is missed, we use the training dataset as testing one}
 }
 
 
@@ -144,8 +138,9 @@ Mohammed Sedki <\url{mohammed.sedki@u-psud.fr}>
 ## n = 178 observations, p = 27 variables 
 data(wine)
 set.seed(123)
-obj <- SelvarLearnLasso(x=wine[,1:27], z=wine[,28], 
-                         models=mixmodGaussianModel(family = "diagonal"), nbcores=4)
+a <- seq(1, 178, 10)
+b <- setdiff(1:178, a)
+obj <- SelvarLearnLasso(x=wine[b,1:27], z=wine[b,28], xt=wine[a,1:27], zt=wine[a,28], nbcores=4)
 summary(obj)
 print(obj)
 }
