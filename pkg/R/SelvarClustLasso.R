@@ -90,8 +90,10 @@ SelvarClustLasso <-
       output <- vector(mode="list",length = 2)
       for(el in 1:2)
       {
-        colnames(bestModel[[cl]]$regparameters) = bestModel[[cl]]$U
-        rownames(bestModel[[cl]]$regparameters) = c("intercept",bestModel[[cl]]$R)
+        if(length(bestModel[[cl]]$U)!=0)
+          colnames(bestModel[[cl]]$regparameters) = bestModel[[cl]]$U
+        if(length(bestModel[[cl]]$R)!=0)
+          rownames(bestModel[[cl]]$regparameters) = c("intercept",bestModel[[cl]]$R)
         object <- list(S=bestModel[[cl]]$S, 
                        R=bestModel[[cl]]$R, 
                        U=bestModel[[cl]]$U,
@@ -111,8 +113,10 @@ SelvarClustLasso <-
       }
     }else
     {
-      colnames(bestModel[[1]]$regparameters) = bestModel[[1]]$U
-      rownames(bestModel[[1]]$regparameters) = c("intercept",bestModel[[1]]$R)
+      if(length(bestModel[[1]]$U)!=0)
+        colnames(bestModel[[1]]$regparameters) = bestModel[[1]]$U
+      if(length(bestModel[[1]]$U)!=0)
+        rownames(bestModel[[1]]$regparameters) = c("intercept",bestModel[[1]]$R)
       output <- list(S=bestModel[[1]]$S, 
                      R=bestModel[[1]]$R, 
                      U=bestModel[[1]]$U,

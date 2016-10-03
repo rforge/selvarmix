@@ -24,7 +24,7 @@ List CritClust::ClustBestModel(vector<int> numExp)
   Function dataframe = base["data.frame"];
   Function RmixmodLearn = Rmixmod["mixmodLearn"];
   Function RmixmodCluster = Rmixmod["mixmodCluster"];
-  Function RmixmodStrategy = Rmixmod["mixmodStrategy"];
+  //Function RmixmodStrategy = Rmixmod["mixmodStrategy"];
   
   
   if(DA == false){
@@ -32,14 +32,14 @@ List CritClust::ClustBestModel(vector<int> numExp)
     for(int j = 0;  j < (int)numExp.size(); ++j)
     dataAux(_, j)  = data(_,numExp[j]-1);
     
-    S4 mixmodstrategy = RmixmodStrategy(Named("nbTry") = 2, 
-    Named("nbTryInInit") = 100, 
-    Named("nbIterationInInit") = 20);   
+    //S4 mixmodstrategy = RmixmodStrategy(Named("nbTry") = 2, 
+    //Named("nbTryInInit") = 100, 
+    //Named("nbIterationInInit") = 20);   
     
     S4 xem = RmixmodCluster(Named("data") = dataframe(dataAux),
     Named("nbCluster") = k,
     Named("models") = m,
-    Named("strategy") = mixmodstrategy,
+    //Named("strategy") = mixmodstrategy,
     Named("criterion") = crit);
     S4 bestResult = xem.slot("bestResult");
     return List::create(Named("criterionValue") = -as<double>(bestResult.slot("criterionValue")),
