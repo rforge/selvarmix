@@ -88,7 +88,7 @@ SelvarClustLasso <-
     if(length(bestModel)==2)
     {
       output <- vector(mode="list",length = 2)
-      for(el in 1:2)
+      for(cl in 1:2)
       {
         if(length(bestModel[[cl]]$U)!=0)
           colnames(bestModel[[cl]]$regparameters) = bestModel[[cl]]$U
@@ -109,7 +109,7 @@ SelvarClustLasso <-
                        proba=bestModel[[cl]]$proba,
                        regparameters=bestModel[[cl]]$regparameters)
         class(object) <- "selvarmix"
-        output[el] <-object 
+        output[cl] <-object 
       }
     }else
     {
@@ -138,72 +138,4 @@ SelvarClustLasso <-
     return(output) 
     
   }
-selvarmix <- function(...) UseMethod("selvarmix")
-summary.selvarmix <- function(obj, ...)
-{
-  if(length(obj)==2)
-    for(i in 1:2)
-    {
-      cat("Criterion:", obj[[i]]$criterion, "\n")
-      cat("Criterion value:", obj[[i]]$criterionValue,"\n")
-      cat("Number of clusters:", obj[[i]]$nbcluster,"\n")
-      cat("Gaussian mixture model:", obj[[i]]$model,"\n")
-      cat("Regression covariance model:", obj[[i]]$rmodel,"\n")
-      cat("Independent covariance model:", obj[[i]]$imodel,"\n")
-      cat("The SRUW model:\n")
-      cat(" S:", obj[[i]]$S,"\n")
-      cat(" R:", obj[[i]]$R,"\n")
-      cat(" U:", obj[[i]]$U,"\n")
-      cat(" W:", obj[[i]]$W,"\n")
-    }
-  else{
-    if(is.null(obj$error))
-    {
-      cat("Criterion:", obj$criterion, "\n")
-      cat("Criterion value:", obj$criterionValue,"\n")
-      cat("Number of clusters:", obj$nbcluster,"\n")
-      cat("Gaussian mixture model:", obj$model,"\n")
-      cat("Regression covariance model:", obj$rmodel,"\n")
-      cat("Independent covariance model:", obj$imodel,"\n")
-      cat("The SRUW model:\n")
-      cat(" S:", obj$S,"\n")
-      cat(" R:", obj$R,"\n")
-      cat(" U:", obj$U,"\n")
-      cat(" W:", obj$W,"\n")
-    }
-    else
-    {
-      cat("Criterion:", obj$criterion, "\n")
-      cat("Criterion value:", obj$criterionValue,"\n")
-      cat("Number of clusters:", obj$nbcluster,"\n")
-      cat("Gaussian mixture model:", obj$model,"\n")
-      cat("Prediction error:", round(obj$error, 2),"\n")
-      cat("Regression covariance model:", obj$rmodel,"\n")
-      cat("Independent covariance model:", obj$imodel,"\n")
-      cat("The SRUW model:\n")
-      cat(" S:", obj$S,"\n")
-      cat(" R:", obj$R,"\n")
-      cat(" U:", obj$U,"\n")
-      cat(" W:", obj$W,"\n")
-      
-      
-    }  
-  }
-}
-#selvarmix <- function(...) UseMethod("selvarmix")
-print.selvarmix <- function(obj, ...)
-{
-  if(length(obj)==2)
-    for(i in 1:2)
-    {
-      print(obj[[i]]$parameters)
-      cat("Regression parameters:\n")
-      print(obj[[i]]$regparameters)
-    }  
-  else
-  {
-    print(obj$parameters)
-    cat("Regression parameters:\n")
-    print(obj$regparameters)
-  }
-}
+
