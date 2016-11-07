@@ -12,7 +12,7 @@ Description: Performs a regularization approach to variable selection in the
              Second, the method of Maugis, Celeux, and Martin-Magniette (2009, 2011) 
              is adapted to define the role of variables in the two frameworks. 
 License: GPL (>= 3)
-Depends: R (>= 3.1.0), glasso,  Rmixmod, parallel, base
-Imports:  glasso,  Rmixmod, Rcpp (>= 0.11.1), methods, parallel
+Depends: R (>= 3.1.0), glasso, Rmixmod, parallel, base
+Imports: Rcpp (>= 0.11.1), methods
 LinkingTo: Rcpp, RcppArmadillo
 NeedsCompilation: yes
