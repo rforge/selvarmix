@@ -20,7 +20,6 @@ VariableSelection<-
     #print(c("listModels.size ...", listModels.size)) 
     wrapper.selectVar <- function(arg)
     {
-      
       myModel <-  mixmodGaussianModel(listModels=models["listModels"][arg[2]])
       orderVar <- rep(NA, ncol(data))
       
@@ -29,28 +28,31 @@ VariableSelection<-
       else
         orderVar <- OrderVariable[arg[1],]
       
-      my.list <- rcppSelectS(data, 
-                             orderVar, 
-                             nbcluster[arg[1]], 
-                             myModel, 
-                             hsize, 
-                             criterion,
-                             z,
-                             supervised)
-      
-      ResSelectVar <- list()
-      ResSelectVar$S <- my.list$S
-      ResSelectVar$nbcluster <- my.list$nbcluster
-      ResSelectVar$criterion <- my.list$criterion
-      ResSelectVar$model <- my.list$model
-      ResSelectVar$criterionValue  <- my.list$criterionValue
-      ResSelectVar$parameters  <- my.list$parameters
-      ResSelectVar$partition <- my.list$partition
-      ResSelectVar$proba <- my.list$proba
-      OrderAux <- setdiff(OrderVariable, ResSelectVar$S)
-      ResSelectVar$W <- rcppSelectW(data, OrderAux, ResSelectVar$S, hsize)
-      return(ResSelectVar)
-      
+      my.list <- try(rcppSelectS(data, 
+                                 orderVar, 
+                                 nbcluster[arg[1]], 
+                                 myModel, 
+                                 hsize, 
+                                 criterion,
+                                 z,
+                                 supervised))
+      if(class(my.list)=="try-error")
+        return(my.list)
+      else
+      {
+        ResSelectVar <- list()
+        ResSelectVar$S <- my.list$S
+        ResSelectVar$nbcluster <- my.list$nbcluster
+        ResSelectVar$criterion <- my.list$criterion
+        ResSelectVar$model <- my.list$model
+        ResSelectVar$criterionValue  <- my.list$criterionValue
+        ResSelectVar$parameters  <- my.list$parameters
+        ResSelectVar$partition <- my.list$partition
+        ResSelectVar$proba <- my.list$proba
+        OrderAux <- setdiff(OrderVariable, ResSelectVar$S)
+        ResSelectVar$W <- rcppSelectW(data, OrderAux, ResSelectVar$S, hsize)
+        return(ResSelectVar)
+      }
     }
     
     if(OutputVector.size < nbcores)
@@ -59,6 +61,15 @@ VariableSelection<-
     arg.grid <- matrix(0, OutputVector.size, 2)  
     arg.grid <- as.matrix(expand.grid(1:nbcluster.size, 1:listModels.size))
     ## si on est sous windows
+    # junk <- list()
+    # for(r in 1:nrow(arg.grid))
+    # { 
+    #   junk[[r]] <- try(wrapper.selectVar(arg.grid[r,]))
+    #   print(paste0("r = ", r))
+    #   print(junk[[r]])
+    #   if(class(junk[[r]])=="try-error")
+    #     print(junk[[r]])
+    # }  
     if(Sys.info()["sysname"] == "Windows")
     {
       cl <- makeCluster(nbcores)
@@ -69,12 +80,9 @@ VariableSelection<-
                           "hsize", 
                           "criterion",
                           "supervised",
-                          "z",
-                          "mixmodLearn",
-                          "mixmodCluster",
-                          "mixmodStrategy")
-      #clusterEvalQ(cl, require(Rmixmod))
+                          "z")
       clusterExport(cl=cl, varlist = common.objects, envir = environment())
+      clusterEvalQ(cl, require(Rmixmod))
       junk <- parApply(cl = cl,  
                        X = arg.grid,
                        MARGIN = 1,
@@ -89,7 +97,7 @@ VariableSelection<-
                        mc.silent = FALSE,
                        mc.preschedule = TRUE,
                        mc.cleanup = TRUE)
-    nb.fails <- 0 
+    nb.fails <- 0
     for(idx in 1:OutputVector.size)
       if(class(junk[[idx]]) == "try-error")
         nb.fails <- nb.fails + 1
@@ -104,7 +112,7 @@ VariableSelection<-
         VariableSelectRes[[idx]]$W <- junk[[ll]][["W"]]
         VariableSelectRes[[idx]]$U <- setdiff(1:dim(data)[2], union(junk[[ll]][["S"]], junk[[ll]][["W"]]))
         VariableSelectRes[[idx]]$criterionValue <- junk[[ll]][["criterionValue"]]
-        VariableSelectRes[[idx]]$criterion <- junk[[ll]][["criterion"]] 
+        VariableSelectRes[[idx]]$criterion <- junk[[ll]][["criterion"]]
         VariableSelectRes[[idx]]$model <- junk[[ll]][["model"]]
         VariableSelectRes[[idx]]$nbcluster <- junk[[ll]][["nbcluster"]]
         VariableSelectRes[[idx]]$parameters <- junk[[ll]][["parameters"]]
@@ -113,7 +121,8 @@ VariableSelection<-
         idx <- idx + 1
       }
     
-    return(VariableSelectRes)  
+    return(VariableSelectRes)
+    
   }
 
 

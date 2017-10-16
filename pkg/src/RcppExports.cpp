@@ -8,7 +8,7 @@ using namespace Rcpp;
 
 // rcppClusteringEMGlasso
 IntegerVector rcppClusteringEMGlasso(List InputList, double l, double r);
-RcppExport SEXP SelvarMix_rcppClusteringEMGlasso(SEXP InputListSEXP, SEXP lSEXP, SEXP rSEXP) {
+RcppExport SEXP _SelvarMix_rcppClusteringEMGlasso(SEXP InputListSEXP, SEXP lSEXP, SEXP rSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -21,7 +21,7 @@ END_RCPP
 }
 // rcppDiscriminantAnalysisGlasso
 IntegerVector rcppDiscriminantAnalysisGlasso(NumericMatrix X_, IntegerVector labels_, const int nbClust, double l, double r);
-RcppExport SEXP SelvarMix_rcppDiscriminantAnalysisGlasso(SEXP X_SEXP, SEXP labels_SEXP, SEXP nbClustSEXP, SEXP lSEXP, SEXP rSEXP) {
+RcppExport SEXP _SelvarMix_rcppDiscriminantAnalysisGlasso(SEXP X_SEXP, SEXP labels_SEXP, SEXP nbClustSEXP, SEXP lSEXP, SEXP rSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -36,7 +36,7 @@ END_RCPP
 }
 // rcppSelectS
 List rcppSelectS(NumericMatrix X, std::vector<int> Order, const int nbCluster, S4 CovForm, const int packSize, std::string Crit, IntegerVector knownlabels, IntegerVector DA);
-RcppExport SEXP SelvarMix_rcppSelectS(SEXP XSEXP, SEXP OrderSEXP, SEXP nbClusterSEXP, SEXP CovFormSEXP, SEXP packSizeSEXP, SEXP CritSEXP, SEXP knownlabelsSEXP, SEXP DASEXP) {
+RcppExport SEXP _SelvarMix_rcppSelectS(SEXP XSEXP, SEXP OrderSEXP, SEXP nbClusterSEXP, SEXP CovFormSEXP, SEXP packSizeSEXP, SEXP CritSEXP, SEXP knownlabelsSEXP, SEXP DASEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -54,7 +54,7 @@ END_RCPP
 }
 // rcppSelectW
 IntegerVector rcppSelectW(NumericMatrix X, std::vector<int> Order, std::vector<int> OtherVar, const int packSize);
-RcppExport SEXP SelvarMix_rcppSelectW(SEXP XSEXP, SEXP OrderSEXP, SEXP OtherVarSEXP, SEXP packSizeSEXP) {
+RcppExport SEXP _SelvarMix_rcppSelectW(SEXP XSEXP, SEXP OrderSEXP, SEXP OtherVarSEXP, SEXP packSizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -68,7 +68,7 @@ END_RCPP
 }
 // rcppSelectR
 IntegerVector rcppSelectR(NumericMatrix X, std::vector<int> S, std::vector<int> U, std::string regmodel);
-RcppExport SEXP SelvarMix_rcppSelectR(SEXP XSEXP, SEXP SSEXP, SEXP USEXP, SEXP regmodelSEXP) {
+RcppExport SEXP _SelvarMix_rcppSelectR(SEXP XSEXP, SEXP SSEXP, SEXP USEXP, SEXP regmodelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -82,7 +82,7 @@ END_RCPP
 }
 // rcppCrit
 List rcppCrit(NumericMatrix X, List MyList, std::vector<std::string> rgm, std::vector<std::string> idm);
-RcppExport SEXP SelvarMix_rcppCrit(SEXP XSEXP, SEXP MyListSEXP, SEXP rgmSEXP, SEXP idmSEXP) {
+RcppExport SEXP _SelvarMix_rcppCrit(SEXP XSEXP, SEXP MyListSEXP, SEXP rgmSEXP, SEXP idmSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -93,4 +93,19 @@ BEGIN_RCPP
     rcpp_result_gen = Rcpp::wrap(rcppCrit(X, MyList, rgm, idm));
     return rcpp_result_gen;
 END_RCPP
+}
+
+static const R_CallMethodDef CallEntries[] = {
+    {"_SelvarMix_rcppClusteringEMGlasso", (DL_FUNC) &_SelvarMix_rcppClusteringEMGlasso, 3},
+    {"_SelvarMix_rcppDiscriminantAnalysisGlasso", (DL_FUNC) &_SelvarMix_rcppDiscriminantAnalysisGlasso, 5},
+    {"_SelvarMix_rcppSelectS", (DL_FUNC) &_SelvarMix_rcppSelectS, 8},
+    {"_SelvarMix_rcppSelectW", (DL_FUNC) &_SelvarMix_rcppSelectW, 4},
+    {"_SelvarMix_rcppSelectR", (DL_FUNC) &_SelvarMix_rcppSelectR, 4},
+    {"_SelvarMix_rcppCrit", (DL_FUNC) &_SelvarMix_rcppCrit, 4},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_SelvarMix(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
 }

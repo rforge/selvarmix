@@ -94,22 +94,22 @@ SelvarClustLasso <-
           colnames(bestModel[[cl]]$regparameters) = bestModel[[cl]]$U
         if(length(bestModel[[cl]]$R)!=0)
           rownames(bestModel[[cl]]$regparameters) = c("intercept",bestModel[[cl]]$R)
-        object <- list(S=bestModel[[cl]]$S, 
-                       R=bestModel[[cl]]$R, 
+        object <- list(S=bestModel[[cl]]$S,
+                       R=bestModel[[cl]]$R,
                        U=bestModel[[cl]]$U,
-                       W=bestModel[[cl]]$W,  
-                       criterionValue=bestModel[[cl]]$criterionValue, 
-                       criterion=bestModel[[cl]]$criterion, 
+                       W=bestModel[[cl]]$W,
+                       criterionValue=bestModel[[cl]]$criterionValue,
+                       criterion=bestModel[[cl]]$criterion,
                        model=bestModel[[cl]]$model,
                        rmodel=bestModel[[cl]]$rmodel,
                        imodel=bestModel[[cl]]$imodel,
                        parameters=bestModel[[cl]]$parameters,
-                       nbcluster=bestModel[[cl]]$nbcluster, 
-                       partition=bestModel[[cl]]$partition, 
+                       nbcluster=bestModel[[cl]]$nbcluster,
+                       partition=bestModel[[cl]]$partition,
                        proba=bestModel[[cl]]$proba,
                        regparameters=bestModel[[cl]]$regparameters)
         class(object) <- "selvarmix"
-        output[cl] <-object 
+        output[cl] <-object
       }
     }else
     {
@@ -117,25 +117,22 @@ SelvarClustLasso <-
         colnames(bestModel[[1]]$regparameters) = bestModel[[1]]$U
       if(length(bestModel[[1]]$U)!=0)
         rownames(bestModel[[1]]$regparameters) = c("intercept",bestModel[[1]]$R)
-      output <- list(S=bestModel[[1]]$S, 
-                     R=bestModel[[1]]$R, 
+      output <- list(S=bestModel[[1]]$S,
+                     R=bestModel[[1]]$R,
                      U=bestModel[[1]]$U,
-                     W=bestModel[[1]]$W,  
-                     criterionValue=bestModel[[1]]$criterionValue, 
-                     criterion=bestModel[[1]]$criterion, 
-                     model=bestModel[[1]]$model, 
+                     W=bestModel[[1]]$W,
+                     criterionValue=bestModel[[1]]$criterionValue,
+                     criterion=bestModel[[1]]$criterion,
+                     model=bestModel[[1]]$model,
                      rmodel=bestModel[[1]]$rmodel,
                      imodel=bestModel[[1]]$imodel,
                      parameters=bestModel[[1]]$parameters,
-                     nbcluster=bestModel[[1]]$nbcluster, 
-                     partition=bestModel[[1]]$partition, 
+                     nbcluster=bestModel[[1]]$nbcluster,
+                     partition=bestModel[[1]]$partition,
                      proba=bestModel[[1]]$proba,
                      regparameters=bestModel[[1]]$regparameters)
       class(output) <- "selvarmix"
     }
-    
-    
-    return(output) 
-    
+    return(output)
   }
 
